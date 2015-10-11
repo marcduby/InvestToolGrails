@@ -1,0 +1,14 @@
+
+
+- ideas
+  - report by industry
+  - report by risk
+  - total by stock; exposure by stock
+  - report by type
+  - totals by person, account
+  
+  
+  Peg calculator
+Buy history
+Notifications for falling stocks
+

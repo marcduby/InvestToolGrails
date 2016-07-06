@@ -22,6 +22,11 @@ class Holding implements Comparable {
 		return total
 	}	
 	
+	public Float getTotalPurchaseAmount() {
+		Float total = (this.purchaseAmount) ? amount * purchaseAmount : 0.0
+		return total
+	}	
+	
 	public Float getTotalDividend() {
 		Float total = (security?.currentPrice) ? amount * security?.currentPrice?.yearlyDividend : 0.0
 		return total

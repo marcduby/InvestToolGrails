@@ -24,7 +24,7 @@
 			</ul>
 		</div>
 		<div id="list-holding" class="content scaffold-list" role="main">
-			<h1><g:message code="default.list.label" args="[entityName]" /></h1>
+			<h1><g:message code="default.list.label" args="[entityName]" /> - ${holdingInstanceList?.size()} items</h1>
 			<g:if test="${flash.message}">
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
@@ -49,6 +49,10 @@
 						<th class="alignRight"><g:message code="holding.industry.label" default="Dividend" /></th>
 					
 						<th class="alignRight"><g:message code="holding.industry.label" default="Percent" /></th>
+					
+						<th class="alignRight"><g:message code="holding.industry.label" default="Purchase Percent" /></th>
+					
+						<th class="alignRight"><g:message code="holding.industry.label" default="Purchase Total" /></th>
 					
 						<th class="alignRight"><g:message code="holding.industry.label" default="Total" /></th>
 					
@@ -78,6 +82,10 @@
 					
 						<td class="alignRight"><g:formatNumber number="${holdingInstance?.totalDividend / holdingInstance?.totalAmount}" type="percent" maxFractionDigits="2"/></td>
 					
+						<td class="alignRight"><g:formatNumber number="${holdingInstance?.totalDividend / holdingInstance?.totalPurchaseAmount}" type="percent" maxFractionDigits="2"/></td>
+					
+						<td class="alignRight"><g:formatNumber number="${holdingInstance?.totalPurchaseAmount}" type="currency" currencyCode="USD" /></td>
+					
 						<td class="alignRight"><g:formatNumber number="${holdingInstance?.totalAmount}" type="currency" currencyCode="USD" /></td>
 					
 						<td class="alignRight"><g:formatNumber number="${holdingInstance?.totalDividend}" type="currency" currencyCode="USD" /></td>
@@ -95,13 +103,19 @@
 					
 						<td></td>
 					
-						<td class="alignRight"></td>
+						<td></td>
+					
+						<td></td>
 					
 						<td class="alignRight"></td>
 					
 						<td class="alignRight"></td>
 					
 						<td class="alignRight"><g:formatNumber number="${percent}" type="percent" maxFractionDigits="2"/></td>
+					
+						<td class="alignRight"><g:formatNumber number="${purchasePercent}" type="percent" maxFractionDigits="2"/></td>
+					
+						<td class="alignRight"><g:formatNumber number="${totalPurchaseAmount}" type="currency" currencyCode="USD" /></td>
 					
 						<td class="alignRight"><g:formatNumber number="${totalAmount}" type="currency" currencyCode="USD" /></td>
 					

@@ -35,13 +35,16 @@ class HoldingController {
 		// totals
 		Float totalAmount = 0.0
 		Float totalDividend = 0.0
+		Float totalPurchaseAmount = 0.0
 		holdingList.each { Holding holding ->
 			totalAmount = totalAmount + holding?.totalAmount
+			totalPurchaseAmount = totalPurchaseAmount + holding?.totalPurchaseAmount
 			totalDividend = totalDividend + holding?.totalDividend
 		}
 		Float percent = totalDividend / totalAmount
+		Float purchasePercent = totalDividend / totalPurchaseAmount
 		
-        [holdingInstanceList: holdingList, holdingInstanceTotal: holdingList.size(), totalAmount: totalAmount, totalDividend: totalDividend, percent: percent, accountList: accountList]
+        [holdingInstanceList: holdingList, holdingInstanceTotal: holdingList.size(), totalAmount: totalAmount, totalPurchaseAmount: totalPurchaseAmount, totalDividend: totalDividend, purchasePercent: purchasePercent, percent: percent, accountList: accountList]
     }
 
     def create() {

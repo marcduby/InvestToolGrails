@@ -1,8 +1,9 @@
 package com.doobs.invest
 
-class MarketCurrentsService {
+import grails.transaction.Transactional
 
-    static transactional = true
+@Transactional
+class MarketCurrentsService {
 
     def serviceMethod() {
 

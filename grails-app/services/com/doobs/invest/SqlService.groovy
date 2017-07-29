@@ -2,7 +2,9 @@ package com.doobs.invest
 
 import groovy.sql.Sql
 import javax.sql.DataSource
+import grails.transaction.Transactional
 
+@Transactional
 class SqlService {
 	DataSource dataSource
 	

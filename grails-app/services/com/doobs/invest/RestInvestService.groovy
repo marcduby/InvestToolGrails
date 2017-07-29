@@ -1,7 +1,9 @@
 package com.doobs.invest
 
 import groovy.text.SimpleTemplateEngine
+import grails.transaction.Transactional
 
+@Transactional
 class RestInvestService {
 	static transactional = true
 		

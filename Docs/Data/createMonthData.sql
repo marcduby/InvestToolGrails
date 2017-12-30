@@ -2,8 +2,7 @@
 -- create the inv_month table
 drop table if exists inv_month;
 create table inv_month (
-	month_id  int not null auto_increment primary key,
-	month_number int not null,
+	month_id  int not null,
     last_month_day date not null,
 	last_updated datetime default null,
 	date_created datetime default null,
@@ -30,7 +29,7 @@ WHILE year_number <= 2070 DO
   SET day_string = concat(day_string, '-01');
 
   -- insert the month
-  insert into inv_month (month_number, last_month_day, last_updated, date_created, version)
+  insert into inv_month (month_id, last_month_day, last_updated, date_created, version)
     values(year_number * 100 + month_number, last_day(day_string), sysdate(), sysdate(), 0);
 
    IF (month_number < 12) THEN
@@ -50,4 +49,4 @@ DELIMITER ;
 call create_month_data_while_loop;
 
 -- test
-select * from inv_month where month_number div 100 = 2017;
+select * from inv_month where month_id div 100 = 2017;

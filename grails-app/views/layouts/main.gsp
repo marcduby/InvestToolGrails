@@ -19,7 +19,8 @@
 				<li><g:link class="${request.forwardURI.contains('/symbol') ? 'current' : ''}" controller="symbol">Symbols</g:link></li>
 				<li><g:link class="${request.forwardURI.contains('/holding') ? 'current' : ''}" controller="holding">Holdings</g:link></li>
 				<li><g:link class="${request.forwardURI.contains('/report') ? 'current' : ''}" controller="report">Reports</g:link></li>
-		    </ul>				
+                <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet">Cash Flow</g:link></li>
+		    </ul>
 		</div>
         <div id="spinner" class="spinner" style="display:none;">
             <img src="${resource(dir:'images',file:'spinner.gif')}" alt="${message(code:'spinner.alt',default:'Loading...')}" />

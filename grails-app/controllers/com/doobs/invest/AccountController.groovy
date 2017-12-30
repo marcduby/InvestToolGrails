@@ -12,7 +12,7 @@ class AccountController {
     }
 
     def list(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
+        params.max = Math.min(max ?: 20, 100)
         [accountInstanceList: Account.list(params), accountInstanceTotal: Account.count()]
     }
 

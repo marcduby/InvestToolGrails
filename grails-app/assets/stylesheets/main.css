@@ -594,3 +594,11 @@ a.skip {
 	position: absolute;
 	left: -9999px;
 }
+
+td.currency {
+	text-align: right;
+}
+
+th.currency {
+	text-align: right;
+}

@@ -35,7 +35,7 @@
 						<g:sortableColumn property="description" title="${message(code: 'account.description.label', default: 'Description')}" />
 					
 						<th><g:message code="account.holding.action" default="Action" /></th>
-						
+
 					</tr>
 				</thead>
 				<tbody>
@@ -52,8 +52,8 @@
 						
 						<td>${fieldValue(bean: accountInstance, field: "description")}</td>
 					
-						<td><g:link class="" controller="account" action="addHolding">Add Holding</g:link></td>
-					
+						<td><g:link class="" controller="accountBalanceSheet" action="addHolding">Add Cash Flow</g:link></td>
+
 					</tr>
 				</g:each>
 				</tbody>

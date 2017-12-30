@@ -1,7 +1,5 @@
 package com.doobs.invest
 
-import grails.test.*
-
 class InvestModelIntegrationTests extends GroovyTestCase {
     protected void setUp() {
         super.setUp()
@@ -13,12 +11,12 @@ class InvestModelIntegrationTests extends GroovyTestCase {
 
     void testSecurityModel() {
 		List<Security> securityList = Security.findAll()
-		assertEquals securityList?.size(), 0
+		assertEquals 136, securityList?.size()
     }
 	
 	void testSymbolModel() {
 		List<Symbol> symbolList = Symbol.findAll()
-		assertEquals symbolList?.size(), 0
+		assertEquals 138, symbolList?.size()
 	}
 	
 	void testTransactionModel() {
@@ -43,6 +41,6 @@ class InvestModelIntegrationTests extends GroovyTestCase {
 	
 	void testHoldingModel() {
 		List<Holding> holdingList = Holding.list()
-		assertEquals holdingList?.size(), 0
+		assertEquals 155, holdingList?.size()
 	}
 }

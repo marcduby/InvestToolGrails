@@ -22,17 +22,17 @@ class SqlServiceIntegrationTests {
 		
 		// test results
 		assertNotNull securityList
-		assertEquals 32, securityList.size()
+		assertEquals 136, securityList.size()
     }
 	
 	@Test
 	void testGetIndustryDiversificationList() {
 		String accountId = "1"
-		List<InvestDiversificationBean> beanList = this.sqlService?.getIndustryDiversificationList(accountId)
+		List<InvestDiversificationBean> beanList = this.sqlService?.getIndustryDiversificationList()
 		
 		// test results
 		assertNotNull beanList
-		assertEquals 11, beanList.size()
+		assertEquals 12, beanList.size()
 		
 		// log
 		beanList.each { InvestDiversificationBean bean ->

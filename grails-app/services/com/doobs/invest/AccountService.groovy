@@ -44,4 +44,14 @@ class AccountService {
 		Collections.sort(holdingList)
 		return holdingList
 	}
+
+	/**
+	 * return a sorted list of balance sheet ordered by month
+	 *
+	 * @return
+	 */
+	List<Holding> getBalanceSheetListOrderedByMonth(Integer accountId) {
+		List<AccountBalanceSheet> balanceSheetList = AccountBalanceSheet.loadByAccountId(accountId).list()
+		return balanceSheetList
+	}
 }

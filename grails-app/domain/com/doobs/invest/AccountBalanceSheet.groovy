@@ -1,48 +1,57 @@
 package com.doobs.invest
 
-import java.util.Date;
-
 class AccountBalanceSheet {
 	Integer id
-	String name
-	String description
-	AccountType type
-	User user
-	
+	Account account
+	Month month
+	Float totalBalance
+	Float cashBalance
+	Float income
+	Float transfer
+
 	// automatic variables
 	Date lastUpdated
 	Date dateCreated
 	
-	// transients
-	String longName
-	
 	public String toString() {
-		return this.getLongName()
-	}
-	
-	public String getLongName() {
-		return this.user?.name + " - " + this.name
+		return this.getListName()
 	}
 	
 	public String getListName() {
-		return this.user?.name?.substring(0, 1) + " - " + this.name
+		return this.account?.name + " - " + this.month?.id
 	}
 	
     static constraints = {
-		name nullable:false
-		type nullable:false
-		user nullable:false
+		account nullable:false
+		month nullable:false
+		totalBalance nullable:false
+		cashBalance nullable:false
+		income nullable:false
+		transfer nullable:false
     }
 	
 	static transients = ['longName']
-	
+
+	static namedQueries = {
+		loadByAccountId { Integer accountId ->
+			account {
+				eq 'id', accountId
+			}
+			month {
+				order("id")
+			}
+		}
+	}
+
 	static mapping = {
-		table 'inv_account'
-		id 				column: 'account_id'
-		name			column: 'name'
-		description		column: 'description'
-		user 			column: 'user_id', fetch: 'join'
-		type 			column: 'account_type_id', fetch: 'join'
+		table 'inv_balance_sheet'
+		id 				column: 'balance_sheet_id'
+		account 		column: 'account_id', fetch: 'join'
+		month 			column: 'month_id', fetch: 'join'
+		totalBalance	column: 'total_balance'
+		cashBalance		column: 'cash_balance'
+		income			column: 'income'
+		transfer		column: 'transfer'
 	}
 
 }

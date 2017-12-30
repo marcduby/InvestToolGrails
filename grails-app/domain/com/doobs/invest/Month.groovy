@@ -1,48 +1,35 @@
 package com.doobs.invest
 
-import java.util.Date;
-
 class Month {
 	Integer id
-	String name
-	String description
-	AccountType type
-	User user
-	
+	Date lastDayOfMonth
+
 	// automatic variables
 	Date lastUpdated
 	Date dateCreated
 	
-	// transients
-	String longName
-	
+	public Integer getMonthNumber() {
+		return (id % 100)
+	}
+
+	public Integer getYear() {
+		return (id / 100)
+	}
+
 	public String toString() {
-		return this.getLongName()
-	}
-	
-	public String getLongName() {
-		return this.user?.name + " - " + this.name
-	}
-	
-	public String getListName() {
-		return this.user?.name?.substring(0, 1) + " - " + this.name
+		return id.toString()
 	}
 	
     static constraints = {
-		name nullable:false
-		type nullable:false
-		user nullable:false
+		lastDayOfMonth nullable:false
     }
 	
-	static transients = ['longName']
+	static transients = ['year', 'monthNumber']
 	
 	static mapping = {
-		table 'inv_account'
-		id 				column: 'account_id'
-		name			column: 'name'
-		description		column: 'description'
-		user 			column: 'user_id', fetch: 'join'
-		type 			column: 'account_type_id', fetch: 'join'
+		table 'inv_month'
+		id				column: 'month_id'
+		lastDayOfMonth	column: 'lastMonthDay'
 	}
 
 }

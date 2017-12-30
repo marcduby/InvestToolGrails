@@ -23,7 +23,7 @@ class AccountServiceIntegrationTests {
 		
 		holdingList = this.accountService?.getAccountHoldingList(accountId)
 		assertNotNull holdingList
-		assertEquals 2, holdingList?.size()
+		assertEquals 41, holdingList?.size()
     }
 	
 	@Test
@@ -32,7 +32,7 @@ class AccountServiceIntegrationTests {
 		
 		securityList = this.accountService?.getSecurityOrderedList()
 		assertNotNull securityList
-		assertEquals 17, securityList.size()
+		assertEquals 136, securityList.size()
 	}
 	
 	@Test
@@ -41,6 +41,15 @@ class AccountServiceIntegrationTests {
 		
 		holdingList = this.accountService?.getHoldingListOrderedByAccountIndustryAndName()
 		assertNotNull holdingList
-		assertEquals 2, holdingList.size()
+		assertEquals 155, holdingList.size()
+	}
+
+	@Test
+	void testGetBalanceSheetListOrderedByMonth() {
+		List<AccountBalanceSheet> balanceSheetList
+
+		balanceSheetList = this.accountService?.getBalanceSheetListOrderedByMonth(12)
+		assertNotNull balanceSheetList
+		assertEquals 25, balanceSheetList.size()
 	}
 }

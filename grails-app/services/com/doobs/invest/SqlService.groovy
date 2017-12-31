@@ -79,6 +79,34 @@ class SqlService {
 		return diversificationList
 	}
 
+	/**
+	 * returns the month list for a year
+	 *
+	 * @param yearId
+	 * @return
+	 */
+	public List<Month> getMonthsForYear(int yearId) {
+		// local variables
+		List<Month> monthList = new ArrayList<Month>();
+
+		// create the sql string
+		String sqlString = "select month_id as id from inv_month where floor(month_id / 100) = ${yearId}";
+
+		// log
+		log.info("The sql string for the month lookup is: " + sqlString);
+
+		// execute the sql
+		def sql = new Sql(this.dataSource);
+		sql.eachRow(sqlString) { row ->
+			Month month = Month.get(row.id);
+			monthList.add(month);
+		}
+
+		// return
+		return monthList;
+	}
+
+
 	List<InvestDiversificationBean> getIndustryDiversificationList() {
 		// format the date
 		List<InvestDiversificationBean> diversificationList = new ArrayList<InvestDiversificationBean>()

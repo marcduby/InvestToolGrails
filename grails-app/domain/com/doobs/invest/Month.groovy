@@ -23,7 +23,13 @@ class Month {
     static constraints = {
 		lastDayOfMonth nullable:false
     }
-	
+
+	static namedQueries = {
+		loadByYear { Integer year ->
+			eq 'id' / 100, year
+		}
+	}
+
 	static transients = ['year', 'monthNumber']
 	
 	static mapping = {

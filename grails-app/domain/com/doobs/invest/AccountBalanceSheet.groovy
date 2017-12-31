@@ -41,6 +41,15 @@ class AccountBalanceSheet {
 				order("id")
 			}
 		}
+
+		loadByAccountIdAndMonthId { Integer accountId, Integer monthId ->
+			account {
+				eq 'id', accountId
+			}
+			month {
+				eq 'id', monthId
+			}
+		}
 	}
 
 	static mapping = {

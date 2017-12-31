@@ -1,11 +1,18 @@
 package com.doobs.invest
 
-import static org.junit.Assert.*
-import org.junit.*
+import org.apache.commons.logging.LogFactory
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
+
+import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertNotNull
+
 
 class SqlServiceIntegrationTests {
 	SqlService sqlService
-	
+	def log = LogFactory.getLog(getClass())
+
     @Before
     void setUp() {
         // Setup logic here
@@ -39,4 +46,14 @@ class SqlServiceIntegrationTests {
 			log.info("got industry: " + bean?.name + " with total: " + bean?.amountTotal)
 		}
 	}
+
+	@Test
+	void testGetMonthsForYear() {
+		List<Month> monthList
+
+		monthList = this.sqlService?.getMonthsForYear(2017)
+		assertNotNull monthList
+		assertEquals 12, monthList.size()
+	}
+
 }

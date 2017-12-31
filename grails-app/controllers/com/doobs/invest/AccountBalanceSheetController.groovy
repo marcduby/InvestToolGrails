@@ -7,12 +7,26 @@ import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
 class AccountBalanceSheetController {
+    // instance variables
+    AccountService accountService;
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 25, 100)
         respond AccountBalanceSheet.list(params), model:[accountBalanceSheetInstanceCount: AccountBalanceSheet.count()]
+    }
+
+    @Transactional
+    def indexByYear(Integer max) {
+        // get the year and account
+        Integer year = Integer.parseInt(params?.year)
+        Integer accountId = Integer.parseInt(params?.accountId)
+
+        // get the account list
+        List<AccountBalanceSheet> accountBalanceSheetList = this.accountService?.getOrCreateAccountBalanceSheetList(accountId, year);
+
+        respond accountBalanceSheetList, model:[accountBalanceSheetInstanceCount: accountBalanceSheetList?.size()], view: "index"
     }
 
     def show(AccountBalanceSheet accountBalanceSheetInstance) {

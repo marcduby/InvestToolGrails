@@ -52,4 +52,5 @@ class AccountServiceIntegrationTests {
 		assertNotNull balanceSheetList
 		assertEquals 25, balanceSheetList.size()
 	}
+
 }

@@ -9,6 +9,7 @@ import grails.transaction.Transactional
 class AccountBalanceSheetController {
     // instance variables
     AccountService accountService;
+    SqlService sqlService;
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
@@ -23,10 +24,13 @@ class AccountBalanceSheetController {
         Integer year = Integer.parseInt(params?.year)
         Integer accountId = Integer.parseInt(params?.accountId)
 
-        // get the account list
+        // get the account cach flow list
         List<AccountBalanceSheet> accountBalanceSheetList = this.accountService?.getOrCreateAccountBalanceSheetList(accountId, year);
 
-        respond accountBalanceSheetList, model:[accountBalanceSheetInstanceCount: accountBalanceSheetList?.size()], view: "index"
+        // get the user list
+        List<AccountUserBean> accountUserBeanList = this.sqlService?.getUserAndAccountsList();
+
+        respond accountBalanceSheetList, model:[accountUserBeanList: accountUserBeanList, accountBalanceSheetInstanceCount: accountBalanceSheetList?.size()], view: "index"
     }
 
     def show(AccountBalanceSheet accountBalanceSheetInstance) {

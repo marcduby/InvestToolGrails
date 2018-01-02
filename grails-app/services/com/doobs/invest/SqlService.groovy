@@ -106,6 +106,56 @@ class SqlService {
 		return monthList;
 	}
 
+	/**
+	 * returns the month list for a year
+	 *
+	 * @param yearId
+	 * @return
+	 */
+	public List<AccountUserBean> getUserAndAccountsList() {
+		// local variables
+		List<AccountUserBean> accountUserBeanList = new ArrayList<AccountUserBean>();
+		AccountUserBean accountUserBean = null;
+
+		// create the sql string
+		String sqlString = """
+			select u.user_id, u.name as user_name, a.account_id, a.name as acct_name, t.account_type_id, t.name as type_name
+			from inv_user u, inv_account a, inv_account_type t
+			where u.user_id = a.user_id
+			  and a.account_type_id = t.account_type_id
+			order by u.user_id, t.account_type_id;
+		"""
+
+		// log
+		log.info("The sql string for the user accounts lookup is: " + sqlString);
+
+		// execute the sql
+		def sql = new Sql(this.dataSource);
+		sql.eachRow(sqlString) { row ->
+			int userId = row.user_id;
+			String userName = row.user_name
+			String accountName = row.acct_name;
+			int accountId = row.account_id
+
+			// create a user object if needed
+			if ((accountUserBean == null) || (accountUserBean.userId != userId)) {
+				accountUserBean = new AccountUserBean();
+				accountUserBean.setName(userName);
+				accountUserBean.setUserId(userId);
+				accountUserBean.setInitial(userName?.substring(0, 1))
+				accountUserBeanList.add(accountUserBean);
+			}
+
+			// add the account
+			AccountBean accountBean = new AccountBean();
+			accountBean.setName(accountName);
+			accountBean.setAccountId(accountId);
+			accountUserBean.accountBeanList.add(accountBean);
+		}
+
+		// return
+		return accountUserBeanList;
+	}
 
 	List<InvestDiversificationBean> getIndustryDiversificationList() {
 		// format the date

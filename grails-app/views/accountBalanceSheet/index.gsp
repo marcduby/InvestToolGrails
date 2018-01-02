@@ -12,8 +12,14 @@
 		<div class="nav" role="navigation">
 			<ul>
 				<li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
 			</ul>
+			<g:each in="${accountUserBeanList}" status="i" var="accountUserBeanInstance">
+				<ul>
+					<g:each in="${accountUserBeanInstance?.accountBeanList}" status="j" var="accountBeanInstance">
+						<li><g:link class="create" action="indexByYear" params="[accountId: accountBeanInstance?.accountId, year: 2017]">${accountUserBeanInstance?.initial} ${accountBeanInstance?.name}</g:link></li>
+					</g:each>
+				</ul>
+			</g:each>
 		</div>
 		<div id="list-accountBalanceSheet" class="content scaffold-list" role="main">
 			<h1><g:message code="default.list.label" args="[entityName]" /></h1>

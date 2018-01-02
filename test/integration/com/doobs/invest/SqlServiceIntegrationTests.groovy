@@ -56,4 +56,13 @@ class SqlServiceIntegrationTests {
 		assertEquals 12, monthList.size()
 	}
 
+	@Test
+	void testGetUserAndAccountsList() {
+		List<AccountUserBean> accountUserBeanList = null;
+
+		accountUserBeanList = this.sqlService?.getUserAndAccountsList()
+		assertNotNull accountUserBeanList
+		assertEquals 3, accountUserBeanList.size()
+	}
+
 }

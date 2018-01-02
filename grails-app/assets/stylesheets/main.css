@@ -475,6 +475,14 @@ th.desc a {
 	background: #ffffff;
 }
 
+.totalGreen {
+	background: #ccff99;
+}
+
+.totalYellow {
+	background: #ffffcc;
+}
+
 th:hover, tr:hover {
 	background: #E1F2B6;
 }

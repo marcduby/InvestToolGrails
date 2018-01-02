@@ -8,6 +8,7 @@ class AccountBalanceSheet {
 	Float cashBalance
 	Float income
 	Float transfer
+	Boolean skip;
 
 	// automatic variables
 	Date lastUpdated
@@ -29,8 +30,15 @@ class AccountBalanceSheet {
 		income nullable:false
 		transfer nullable:false
     }
+
+	public String getMonthName() {
+		Integer year = (int)(this.month?.id / 100);
+		Integer month = this.month?.id % 100;
+		String monthName = new java.text.DateFormatSymbols().months[month - 1] + " " + year.toString()
+		return monthName
+	}
 	
-	static transients = ['longName']
+	static transients = ['longName', 'monthName']
 
 	static namedQueries = {
 		loadByAccountId { Integer accountId ->
@@ -61,6 +69,7 @@ class AccountBalanceSheet {
 		cashBalance		column: 'cash_balance'
 		income			column: 'income'
 		transfer		column: 'transfer'
+		skip			column: 'skip'
 	}
 
 }

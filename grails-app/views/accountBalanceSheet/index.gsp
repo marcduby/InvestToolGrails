@@ -46,11 +46,11 @@
 				</thead>
 				<tbody>
 				<g:each in="${accountBalanceSheetInstanceList}" status="i" var="accountBalanceSheetInstance">
-					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
+					<tr class="${(!accountBalanceSheetInstance?.skip && (accountBalanceSheetInstance?.version == 0)) ? 'totalYellow' : ((i % 2) == 0 ? 'even' : 'odd')}">
 					
 						<td><g:link action="show" id="${accountBalanceSheetInstance.id}">${fieldValue(bean: accountBalanceSheetInstance, field: "account")}</g:link></td>
 					
-						<td>${fieldValue(bean: accountBalanceSheetInstance, field: "month")}</td>
+						<td class="currency">${fieldValue(bean: accountBalanceSheetInstance, field: "monthName")}</td>
 					
 						<td class="currency"><g:formatNumber number="${accountBalanceSheetInstance?.totalBalance}" type="currency" currencyCode="USD" /></td>
 

@@ -87,6 +87,7 @@ class AccountService {
 				accountBalanceSheet.setTotalBalance(0.0);
 				accountBalanceSheet.setIncome(0.0);
 				accountBalanceSheet.setTransfer(0.0);
+				accountBalanceSheet.setSkip(false);
 
 				// log
 				log.info("Create account balance sheet for account: " + accountId + " and month: " + month.id)

@@ -25,7 +25,7 @@
 		<g:message code="accountBalanceSheet.totalBalance.label" default="Total Balance" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:field name="totalBalance" value="${fieldValue(bean: accountBalanceSheetInstance, field: 'totalBalance')}" required=""/>
+	<input type="text" name="totalBalance" value="${accountBalanceSheetInstance?.totalBalance}"/>
 
 </div>
 
@@ -53,6 +53,15 @@
 		<span class="required-indicator">*</span>
 	</label>
 	<g:field name="transfer" value="${fieldValue(bean: accountBalanceSheetInstance, field: 'transfer')}" required=""/>
+
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: accountBalanceSheetInstance, field: 'skip', 'error')} ">
+	<label for="skip">
+		<g:message code="accountBalanceSheet.skip.label" default="Skip" />
+		
+	</label>
+	<g:checkBox name="skip" value="${accountBalanceSheetInstance?.skip}" />
 
 </div>
 

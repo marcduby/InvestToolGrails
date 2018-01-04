@@ -21,8 +21,8 @@ class AccountBalanceSheetController {
     @Transactional
     def indexByYear(Integer max) {
         // get the year and account
-        Integer year = Integer.parseInt(params?.year)
-        Integer accountId = Integer.parseInt(params?.accountId)
+        Integer year = params.year ? Integer.parseInt(params?.year) : 2017
+        Integer accountId = params.accountId ? Integer.parseInt(params?.accountId) : 1
 
         // get the account cach flow list
         List<AccountBalanceSheet> accountBalanceSheetList = this.accountService?.getOrCreateAccountBalanceSheetList(accountId, year);
@@ -30,7 +30,15 @@ class AccountBalanceSheetController {
         // get the user list
         List<AccountUserBean> accountUserBeanList = this.sqlService?.getUserAndAccountsList();
 
-        respond accountBalanceSheetList, model:[accountUserBeanList: accountUserBeanList, accountBalanceSheetInstanceCount: accountBalanceSheetList?.size()], view: "index"
+        // add up the income and transfers
+        Float totalIncome = 0.0;
+        Float totalTransfer = 0.0;
+        for (AccountBalanceSheet accountBalanceSheet : accountBalanceSheetList) {
+            totalIncome += accountBalanceSheet?.income;
+            totalTransfer += accountBalanceSheet?.transfer;
+        }
+
+        respond accountBalanceSheetList, model:[accountUserBeanList: accountUserBeanList, accountBalanceSheetInstanceCount: accountBalanceSheetList?.size(), totalIncome: totalIncome, totalTransfer: totalTransfer], view: "index"
     }
 
     def show(AccountBalanceSheet accountBalanceSheetInstance) {

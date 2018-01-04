@@ -4,10 +4,10 @@ class AccountBalanceSheet {
 	Integer id
 	Account account
 	Month month
-	Float totalBalance
-	Float cashBalance
-	Float income
-	Float transfer
+	BigDecimal totalBalance
+	BigDecimal cashBalance
+	BigDecimal income
+	BigDecimal transfer
 	Boolean skip;
 
 	// automatic variables
@@ -25,10 +25,10 @@ class AccountBalanceSheet {
     static constraints = {
 		account nullable:false
 		month nullable:false
-		totalBalance nullable:false
-		cashBalance nullable:false
-		income nullable:false
-		transfer nullable:false
+		totalBalance nullable:false, scale: 2
+		cashBalance nullable:false, scale: 2
+		income nullable:false, scale: 2
+		transfer nullable:false, scale: 2
     }
 
 	public String getMonthName() {

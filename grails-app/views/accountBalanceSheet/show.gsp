@@ -41,42 +41,34 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${accountBalanceSheetInstance?.totalBalance}">
 				<li class="fieldcontain">
 					<span id="totalBalance-label" class="property-label"><g:message code="accountBalanceSheet.totalBalance.label" default="Total Balance" /></span>
 					
-						<span class="property-value" aria-labelledby="totalBalance-label"><g:fieldValue bean="${accountBalanceSheetInstance}" field="totalBalance"/></span>
+						<span class="property-value" aria-labelledby="totalBalance-label"><g:formatNumber number="${accountBalanceSheetInstance?.totalBalance}" type="currency" currencyCode="USD" /></span>
 					
 				</li>
-				</g:if>
-			
-				<g:if test="${accountBalanceSheetInstance?.cashBalance}">
+
 				<li class="fieldcontain">
 					<span id="cashBalance-label" class="property-label"><g:message code="accountBalanceSheet.cashBalance.label" default="Cash Balance" /></span>
 					
-						<span class="property-value" aria-labelledby="cashBalance-label"><g:fieldValue bean="${accountBalanceSheetInstance}" field="cashBalance"/></span>
+						<span class="property-value" aria-labelledby="cashBalance-label"><g:formatNumber number="${accountBalanceSheetInstance?.cashBalance}" type="currency" currencyCode="USD" /></span>
 					
 				</li>
-				</g:if>
-			
-				<g:if test="${accountBalanceSheetInstance?.income}">
+
 				<li class="fieldcontain">
 					<span id="income-label" class="property-label"><g:message code="accountBalanceSheet.income.label" default="Income" /></span>
 					
-						<span class="property-value" aria-labelledby="income-label"><g:fieldValue bean="${accountBalanceSheetInstance}" field="income"/></span>
+						<span class="property-value" aria-labelledby="income-label"><g:formatNumber number="${accountBalanceSheetInstance?.income}" type="currency" currencyCode="USD" /></span>
 					
 				</li>
-				</g:if>
-			
-				<g:if test="${accountBalanceSheetInstance?.transfer}">
+
 				<li class="fieldcontain">
 					<span id="transfer-label" class="property-label"><g:message code="accountBalanceSheet.transfer.label" default="Transfer" /></span>
 					
-						<span class="property-value" aria-labelledby="transfer-label"><g:fieldValue bean="${accountBalanceSheetInstance}" field="transfer"/></span>
+						<span class="property-value" aria-labelledby="transfer-label"><g:formatNumber number="${accountBalanceSheetInstance?.transfer}" type="currency" currencyCode="USD" /></span>
 					
 				</li>
-				</g:if>
-			
+
 				<g:if test="${accountBalanceSheetInstance?.dateCreated}">
 				<li class="fieldcontain">
 					<span id="dateCreated-label" class="property-label"><g:message code="accountBalanceSheet.dateCreated.label" default="Date Created" /></span>
@@ -91,6 +83,15 @@
 					<span id="lastUpdated-label" class="property-label"><g:message code="accountBalanceSheet.lastUpdated.label" default="Last Updated" /></span>
 					
 						<span class="property-value" aria-labelledby="lastUpdated-label"><g:formatDate date="${accountBalanceSheetInstance?.lastUpdated}" /></span>
+					
+				</li>
+				</g:if>
+			
+				<g:if test="${accountBalanceSheetInstance?.skip}">
+				<li class="fieldcontain">
+					<span id="skip-label" class="property-label"><g:message code="accountBalanceSheet.skip.label" default="Skip" /></span>
+					
+						<span class="property-value" aria-labelledby="skip-label"><g:formatBoolean boolean="${accountBalanceSheetInstance?.skip}" /></span>
 					
 				</li>
 				</g:if>

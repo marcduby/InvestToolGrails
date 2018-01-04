@@ -16,7 +16,7 @@
 			<g:each in="${accountUserBeanList}" status="i" var="accountUserBeanInstance">
 				<ul>
 					<g:each in="${accountUserBeanInstance?.accountBeanList}" status="j" var="accountBeanInstance">
-						<li><g:link class="create" action="indexByYear" params="[accountId: accountBeanInstance?.accountId, year: 2017]">${accountUserBeanInstance?.initial} ${accountBeanInstance?.name}</g:link></li>
+						<li><g:link class="create" action="indexByYear" params="[accountId: accountBeanInstance?.accountId, year: 2017]">${accountUserBeanInstance?.initial} - ${accountBeanInstance?.name}</g:link></li>
 					</g:each>
 				</ul>
 			</g:each>
@@ -41,7 +41,9 @@
 						<g:sortableColumn class="currency" property="income" title="${message(code: 'accountBalanceSheet.income.label', default: 'Income')}" />
 					
 						<g:sortableColumn class="currency" property="transfer" title="${message(code: 'accountBalanceSheet.transfer.label', default: 'Transfer')}" />
-					
+
+						<th class="currency"><g:message code="accountBalanceSheet.month.label" default="Skip" /></th>
+
 					</tr>
 				</thead>
 				<tbody>
@@ -60,8 +62,20 @@
 
 						<td class="currency"><g:formatNumber number="${accountBalanceSheetInstance?.transfer}" type="currency" currencyCode="USD" /></td>
 
+						<td class="currency">${fieldValue(bean: accountBalanceSheetInstance, field: "skip")}</td>
+
 					</tr>
 				</g:each>
+
+				<tr class="totalGreen">
+					<td><b>Total</b></td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td class="currency"><g:formatNumber number="${totalIncome}" type="currency" currencyCode="USD" /></td>
+					<td class="currency"><g:formatNumber number="${totalTransfer}" type="currency" currencyCode="USD" /></td>
+					<td>&nbsp;</td>
+				</tr>
 				</tbody>
 			</table>
 			<div class="pagination">

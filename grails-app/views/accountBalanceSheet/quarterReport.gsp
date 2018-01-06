@@ -21,12 +21,15 @@
 				<div class="message" role="status">${flash.message}</div>
 			</g:if>
 			<table>
+
+
+<g:each in="${balanceSheetListBeanList}" status="jj" var="balanceSheetListBeanListInstance">
 			<thead>
 					<tr>
 					
-						<th><g:message code="accountBalanceSheet.account.label" default="Name" /></th>
+						<th>${balanceSheetListBeanListInstance?.accountType?.name}</th>
 
-						<g:each in="${balanceSheetListBeanList?.get(0).getMonthList()}" status="i" var="monthInstance">
+						<g:each in="${balanceSheetListBeanListInstance.getMonthList()}" status="i" var="monthInstance">
 
 							<th class="currency">${monthInstance?.getMonthName()}</th>
 
@@ -37,15 +40,15 @@
 					</tr>
 				</thead>
 				<tbody>
-				<g:each in="${balanceSheetListBeanList.get(0).getAccountIdList()}" status="j" var="accountId">
+				<g:each in="${balanceSheetListBeanListInstance.getAccountIdList()}" status="j" var="accountId">
 
 					<tr class="${((j % 2) == 0 ? 'even' : 'odd')}">
 					
 						<td>${com.doobs.invest.Account.get(accountId)?.user?.name.substring(0, 1)} - ${com.doobs.invest.Account.get(accountId)?.name}</td>
 
-						<g:each in="${balanceSheetListBeanList.get(0)?.getMonthList()}" status="k" var="monthInstance">
+						<g:each in="${balanceSheetListBeanListInstance?.getMonthList()}" status="k" var="monthInstance">
 
-							<td class="currency"><g:formatNumber number="${balanceSheetListBeanList.get(0)?.getBalanceSheetByYearAndAccountId(monthInstance?.getId(), accountId)?.totalBalance}" type="currency" currencyCode="USD" /></td>
+							<td class="currency"><g:formatNumber number="${balanceSheetListBeanListInstance?.getBalanceSheetByYearAndAccountId(monthInstance?.getId(), accountId)?.totalBalance}" type="currency" currencyCode="USD" /></td>
 
 							<td class="currency">40%</td>
 
@@ -58,9 +61,9 @@
 
 					<td><b>Total</b></td>
 
-					<g:each in="${balanceSheetListBeanList.get(0)?.getMonthList()}" status="k" var="monthInstance">
+					<g:each in="${balanceSheetListBeanListInstance?.getMonthList()}" status="k" var="monthInstance">
 
-						<td class="currency"><g:formatNumber number="${balanceSheetListBeanList.get(0)?.getTotalBalance(monthInstance?.getId())}" type="currency" currencyCode="USD" /></td>
+						<td class="currency"><g:formatNumber number="${balanceSheetListBeanListInstance?.getTotalBalance(monthInstance?.getId())}" type="currency" currencyCode="USD" /></td>
 
 						<td class="currency">40%</td>
 
@@ -68,6 +71,24 @@
 
 				</tr>
 
+				</tbody>
+				</g:each>
+
+
+				<tbody>
+					<tr class="totalGreen">
+
+						<td><b>Total All</b></td>
+
+						<g:each in="${monthList}" status="k" var="monthInstance">
+
+							<td class="currency"><g:formatNumber number="${totalBalanceMap?.get(monthInstance?.getId())}" type="currency" currencyCode="USD" /></td>
+
+							<td class="currency">40%</td>
+
+						</g:each>
+
+					</tr>
 				</tbody>
 			</table>
 			<div class="pagination">

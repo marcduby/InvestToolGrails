@@ -167,13 +167,21 @@ class SqlService {
 		// local variables
 		Map<Integer, BalanceSheetListBean> balanceSheetListBeanMap = new HashMap<Integer, BalanceSheetListBean>();
 		List<Month> monthList = new ArrayList<Month>();
-		def monthIdList = [3, 6, 9, 12];
+		def monthIdList = [0, 3, 6, 9, 12];
 		List<Integer> accountIdList = null;
 
 		// build the month list
 		for (int quarterId : monthIdList) {
-			Integer monthId = (year * 100) + quarterId;
-			monthList.add(Month.get(monthId));
+			Integer monthId = null;
+			if (quarterId == 0) {
+				monthId = ((year - 1) * 100) + 12;
+
+			} else {
+				monthId = (year * 100) + quarterId;
+				// add
+				monthList.add(Month.get(monthId));
+			}
+
 		}
 
 		// get the account list

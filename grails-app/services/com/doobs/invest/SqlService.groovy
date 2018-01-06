@@ -197,6 +197,9 @@ class SqlService {
 				AccountBalanceSheet sheet = AccountBalanceSheet.loadByAccountIdAndMonthId(account.id, month.id).get();
 				balanceSheetListBeanMap.get(account.type.id).accountBalanceSheetList.add(sheet);
 			}
+
+			// add the account id list
+			balanceSheetListBeanMap.get(account.type.id).addToAccountIdList(accountId)
 		}
 
 		// return

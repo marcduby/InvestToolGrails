@@ -19,8 +19,15 @@ class Month {
 	public String toString() {
 		return id.toString()
 	}
-	
-    static constraints = {
+
+	public String getMonthName() {
+		Integer year = (int)(this.id / 100);
+		Integer month = this.id % 100;
+		String monthName = new java.text.DateFormatSymbols().months[month - 1] + " " + year.toString()
+		return monthName
+	}
+
+	static constraints = {
 		lastDayOfMonth nullable:false
     }
 
@@ -30,7 +37,7 @@ class Month {
 		}
 	}
 
-	static transients = ['year', 'monthNumber']
+	static transients = ['year', 'monthNumber', 'monthName']
 	
 	static mapping = {
 		table 'inv_month'

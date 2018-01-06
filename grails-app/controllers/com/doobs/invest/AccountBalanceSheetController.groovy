@@ -19,6 +19,20 @@ class AccountBalanceSheetController {
     }
 
     @Transactional
+    def quarterReport(Integer max) {
+        // local variables
+        Integer year = 2017;
+        List<BalanceSheetListBean> balanceSheetListBeanList = null;
+        Integer groupId = 2;
+
+        // get the list
+        balanceSheetListBeanList = this.sqlService?.getQuarterlyBalanceSheetsReport(year, groupId);
+
+        // return
+        render model:[balanceSheetListBeanList: balanceSheetListBeanList], view: "quarterReport"
+    }
+
+    @Transactional
     def indexByYear(Integer max) {
         // get the year and account
         Integer year = params.year ? Integer.parseInt(params?.year) : 2017

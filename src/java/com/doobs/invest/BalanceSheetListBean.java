@@ -12,6 +12,7 @@ public class BalanceSheetListBean {
     private List<AccountBalanceSheet> accountBalanceSheetList = new ArrayList<AccountBalanceSheet>();
     private AccountType accountType;
     private List<Month> monthList;
+    private List<Integer> accountIdList = new ArrayList<Integer>();
 
     public AccountType getAccountType() {
         return accountType;
@@ -37,19 +38,29 @@ public class BalanceSheetListBean {
         this.monthList = monthList;
     }
 
+    public List<Integer> getAccountIdList() {
+        return accountIdList;
+    }
+
+    public void addToAccountIdList(Integer accountId) {
+        if (!this.accountIdList.contains(accountId)) {
+            this.accountIdList.add(accountId);
+        }
+    }
+
     /**
      * get the account balance sheet for the account id given and the year given
      *
-     * @param year
+     * @param monthId
      * @param accountId
      * @return
      */
-    public AccountBalanceSheet getBalanceSheetByYearAndAccountId(Integer year, Integer accountId) {
+    public AccountBalanceSheet getBalanceSheetByYearAndAccountId(Integer monthId, Integer accountId) {
         // local variables
         AccountBalanceSheet accountBalanceSheet = null;
 
         for (AccountBalanceSheet sheet : this.accountBalanceSheetList) {
-            if ((year == sheet.getMonth().getYear()) && (accountId == sheet.getId())) {
+            if ((monthId == sheet.getMonth().getId()) && (accountId == sheet.getAccount().getId())) {
                 accountBalanceSheet = sheet;
                 break;
             }
@@ -64,13 +75,15 @@ public class BalanceSheetListBean {
      *
      * @return
      */
-    public BigDecimal getTotalBalance() {
+    public BigDecimal getTotalBalance(Integer monthId) {
         // local variables
         BigDecimal total = new BigDecimal(0.0);
 
         // loop and get total
         for (AccountBalanceSheet sheet : this.accountBalanceSheetList) {
-            total = total.add(sheet.getTotalBalance());
+            if (sheet.getMonth().getId() == monthId) {
+                total = total.add(sheet.getTotalBalance());
+            }
         }
 
         // return

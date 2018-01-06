@@ -53,6 +53,40 @@ class AccountBalanceSheetController {
     }
 
     @Transactional
+    def monthReport(Integer max) {
+        // local variables
+        Integer year = 2017;
+        List<BalanceSheetListBean> balanceSheetListBeanList = null;
+        Integer groupId = 2;
+        Map<Integer, BigDecimal> totalBalanceMap = new Hashtable<Integer, BigDecimal>();
+        List<Month> monthList = null;
+
+        // get the list
+        balanceSheetListBeanList = this.sqlService?.getMonthlyBalanceSheetsReport(year, groupId);
+
+        // get the month list and totals
+        if ((balanceSheetListBeanList != null) && (balanceSheetListBeanList.size() > 0)) {
+            monthList = balanceSheetListBeanList.get(0).monthList;
+
+            // loop to get all the totals
+            for (BalanceSheetListBean bean : balanceSheetListBeanList) {
+                for (AccountBalanceSheet sheet : bean.accountBalanceSheetList) {
+                    if (totalBalanceMap.get(sheet.month.id) == null) {
+                        totalBalanceMap.put(sheet.month.id, new BigDecimal(0))
+                    }
+
+                    // add
+                    totalBalanceMap.put(sheet.month.id, totalBalanceMap.get(sheet.month.id).add(sheet.totalBalance))
+                }
+            }
+
+        }
+
+        // return
+        render model:[balanceSheetListBeanList: balanceSheetListBeanList, totalBalanceMap: totalBalanceMap, monthList: monthList], view: "monthReport"
+    }
+
+    @Transactional
     def indexByYear(Integer max) {
         // get the year and account
         Integer year = params.year ? Integer.parseInt(params?.year) : 2017

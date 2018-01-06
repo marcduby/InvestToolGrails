@@ -162,6 +162,39 @@ class SqlService {
 	 *
 	 * @param year
 	 * @return
+	 */
+	public List<BalanceSheetListBean> getMonthlyBalanceSheetsReport(Integer year, Integer groupId) {
+		// local variables
+		List< BalanceSheetListBean> balanceSheetListBeanList = new ArrayList<Integer>();
+		List<Month> monthList = new ArrayList<Month>();
+		def monthIdList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+		// build the month list
+		for (int quarterId : monthIdList) {
+			Integer monthId = null;
+			if (quarterId == 0) {
+				monthId = ((year - 1) * 100) + 12;
+
+			} else {
+				monthId = (year * 100) + quarterId;
+				// add
+				monthList.add(Month.get(monthId));
+			}
+
+		}
+
+		// get the list
+		balanceSheetListBeanList = this.getAccountSheetListByMonthList(monthList, groupId);
+
+		// return
+		return balanceSheetListBeanList;
+	}
+
+	/**
+	 * get the quarter list report
+	 *
+	 * @param year
+	 * @return
      */
 	public List<BalanceSheetListBean> getQuarterlyBalanceSheetsReport(Integer year, Integer groupId) {
 		// local variables
@@ -213,6 +246,48 @@ class SqlService {
 		// return
 		return balanceSheetListBeanMap.values().toList()
 
+	}
+
+	/**
+	 * get the account sheet list by group and month list
+	 *
+	 * @param monthList
+	 * @param groupId
+     * @return
+     */
+	private List<BalanceSheetListBean> getAccountSheetListByMonthList(List<Month> monthList, Integer groupId) {
+		// local variables
+		Map<Integer, BalanceSheetListBean> balanceSheetListBeanMap = new HashMap<Integer, BalanceSheetListBean>();
+		List<Integer> accountIdList = null;
+
+		// get the account list
+		accountIdList = this.getAccountIdListForGroup(groupId);
+
+		// build the balance sheet list beans
+		for (Integer accountId : accountIdList) {
+			// get the account balance sheet
+			Account account = Account.get(accountId);
+
+			// add it to the appropriate sheet bean
+			if (balanceSheetListBeanMap.get(account.type.id) == null) {
+				BalanceSheetListBean balanceSheetListBean = new BalanceSheetListBean();
+				balanceSheetListBean.setMonthList(monthList);
+				balanceSheetListBean.setAccountType(account.type)
+				balanceSheetListBeanMap.put(account.type.id, balanceSheetListBean)
+			}
+
+			// add the months needed
+			for (Month month : monthList) {
+				AccountBalanceSheet sheet = AccountBalanceSheet.loadByAccountIdAndMonthId(account.id, month.id).get();
+				balanceSheetListBeanMap.get(account.type.id).accountBalanceSheetList.add(sheet);
+			}
+
+			// add the account id list
+			balanceSheetListBeanMap.get(account.type.id).addToAccountIdList(accountId)
+		}
+
+		// return
+		return balanceSheetListBeanMap.values().toList()
 	}
 
 	/**

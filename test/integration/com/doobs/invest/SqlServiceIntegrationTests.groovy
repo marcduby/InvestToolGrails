@@ -93,4 +93,19 @@ class SqlServiceIntegrationTests {
 		assertNotNull(balanceSheetListBeanList);
 		assertEquals(4, balanceSheetListBeanList.size())
 	}
+
+	@Test
+	void testGetMonthlyBalanceSheetsReport() {
+		// local variables
+		List<BalanceSheetListBean> balanceSheetListBeanList = null;
+		Integer year = 2017;
+		Integer groupId = 1;
+
+		// get the list
+		balanceSheetListBeanList = this.sqlService.getMonthlyBalanceSheetsReport(year, groupId);
+
+		// return
+		assertNotNull(balanceSheetListBeanList);
+		assertEquals(4, balanceSheetListBeanList.size())
+	}
 }

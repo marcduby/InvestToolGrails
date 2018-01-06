@@ -27,6 +27,13 @@ class Month {
 		return monthName
 	}
 
+	public String getShortMonthName() {
+		Integer year = (int)(this.id / 100);
+		Integer month = this.id % 100;
+		String monthName = new java.text.DateFormatSymbols().months[month - 1].substring(0, 3) + " " + year.toString()
+		return monthName
+	}
+
 	static constraints = {
 		lastDayOfMonth nullable:false
     }

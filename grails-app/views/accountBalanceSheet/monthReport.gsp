@@ -32,18 +32,10 @@
 						<g:each in="${balanceSheetListBeanListInstance.getMonthList()}" status="i" var="monthInstance">
 
 							<g:if test="${jj == 0}">
-
-								<th class="currency">${monthInstance?.getMonthName()}</th>
-
-								<th class="currency">Percent</th>
-
+								<th class="currency">${monthInstance?.getShortMonthName()}</th>
 							</g:if>
 							<g:else>
-
 								<th class="currency">&nbsp;</th>
-
-								<th class="currency">&nbsp;</th>
-
 							</g:else>
 
 						</g:each>
@@ -61,8 +53,6 @@
 
 							<td class="currency"><g:formatNumber number="${balanceSheetListBeanListInstance?.getBalanceSheetByYearAndAccountId(monthInstance?.getId(), accountId)?.totalBalance}" type="currency" currencyCode="USD" /></td>
 
-							<td class="currency">40%</td>
-
 						</g:each>
 
 					</tr>
@@ -75,8 +65,6 @@
 					<g:each in="${balanceSheetListBeanListInstance?.getMonthList()}" status="k" var="monthInstance">
 
 						<td class="currency"><g:formatNumber number="${balanceSheetListBeanListInstance?.getTotalBalance(monthInstance?.getId())}" type="currency" currencyCode="USD" /></td>
-
-						<td class="currency">40%</td>
 
 					</g:each>
 
@@ -94,8 +82,6 @@
 						<g:each in="${monthList}" status="k" var="monthInstance">
 
 							<td class="currency"><g:formatNumber number="${totalBalanceMap?.get(monthInstance?.getId())}" type="currency" currencyCode="USD" /></td>
-
-							<td class="currency">40%</td>
 
 						</g:each>
 

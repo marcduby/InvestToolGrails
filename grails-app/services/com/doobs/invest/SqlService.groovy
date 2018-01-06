@@ -157,6 +157,86 @@ class SqlService {
 		return accountUserBeanList;
 	}
 
+	/**
+	 * get the quarter list report
+	 *
+	 * @param year
+	 * @return
+     */
+	public List<BalanceSheetListBean> getQuarterlyBalanceSheetsReport(Integer year, Integer groupId) {
+		// local variables
+		Map<Integer, BalanceSheetListBean> balanceSheetListBeanMap = new HashMap<Integer, BalanceSheetListBean>();
+		List<Month> monthList = new ArrayList<Month>();
+		def monthIdList = [3, 6, 9, 12];
+		List<Integer> accountIdList = null;
+
+		// build the month list
+		for (int quarterId : monthIdList) {
+			Integer monthId = (year * 100) + quarterId;
+			monthList.add(Month.get(monthId));
+		}
+
+		// get the account list
+		accountIdList = this.getAccountIdListForGroup(groupId);
+
+		// build the balance sheet list beans
+		for (Integer accountId : accountIdList) {
+			// get the account balance sheet
+			Account account = Account.get(accountId);
+
+			// add it to the appropriate sheet bean
+			if (balanceSheetListBeanMap.get(account.type.id) == null) {
+				BalanceSheetListBean balanceSheetListBean = new BalanceSheetListBean();
+				balanceSheetListBean.setMonthList(monthList);
+				balanceSheetListBean.setAccountType(account.type)
+				balanceSheetListBeanMap.put(account.type.id, balanceSheetListBean)
+			}
+
+			// add the months needed
+			for (Month month : monthList) {
+				AccountBalanceSheet sheet = AccountBalanceSheet.loadByAccountIdAndMonthId(account.id, month.id).get();
+				balanceSheetListBeanMap.get(account.type.id).accountBalanceSheetList.add(sheet);
+			}
+		}
+
+		// return
+		return balanceSheetListBeanMap.values().toList()
+
+	}
+
+	/**
+	 * returns all the account ids that are linked to a user part of a group
+	 *
+	 * @param group_id
+	 * @return
+     */
+	public List<Integer> getAccountIdListForGroup(Integer group_id) {
+		// local variables
+		List<Integer> accountIdList = new ArrayList<Integer>();
+
+		// create the sql string
+		String sqlString = """
+			select u.user_id, u.name, a.account_id, a.name, t.account_type_id, t.name, group_link.group_id
+			from inv_user u, inv_account a, inv_account_type t, inv_user_group_link group_link
+			where u.user_id = a.user_id
+			  and a.account_type_id = t.account_type_id
+			  and u.user_id = group_link.user_id
+			order by t.account_type_id, u.user_id, group_link.group_id;
+		"""
+
+		// execute the sql
+		def sql = new Sql(this.dataSource);
+		sql.eachRow(sqlString) { row ->
+			if (row.group_id == group_id) {
+				accountIdList.add(row.account_id);
+			}
+
+		}
+
+		// return
+		return accountIdList;
+	}
+
 	List<InvestDiversificationBean> getIndustryDiversificationList() {
 		// format the date
 		List<InvestDiversificationBean> diversificationList = new ArrayList<InvestDiversificationBean>()

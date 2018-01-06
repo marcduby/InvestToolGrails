@@ -62,7 +62,35 @@ class SqlServiceIntegrationTests {
 
 		accountUserBeanList = this.sqlService?.getUserAndAccountsList()
 		assertNotNull accountUserBeanList
-		assertEquals 3, accountUserBeanList.size()
+		assertEquals 4, accountUserBeanList.size()
 	}
 
+	@Test
+	void testGetAccountIdListForGroup() {
+		// local variables
+		Integer groupId = 1;
+		List<Integer> accountIdList = null;
+
+		// get the account id list
+		accountIdList = this.sqlService.getAccountIdListForGroup(groupId);
+
+		// test
+		assertNotNull(accountIdList)
+		assertEquals(15, accountIdList.size())
+	}
+
+	@Test
+	void testGetQuarterlyBalanceSheetsReport() {
+		// local variables
+		List<BalanceSheetListBean> balanceSheetListBeanList = null;
+		Integer year = 2017;
+		Integer groupId = 1;
+
+		// get the list
+		balanceSheetListBeanList = this.sqlService.getQuarterlyBalanceSheetsReport(year, groupId);
+
+		// return
+		assertNotNull(balanceSheetListBeanList);
+		assertEquals(4, balanceSheetListBeanList.size())
+	}
 }

@@ -13,6 +13,9 @@
 		<div class="nav" role="navigation">
 			<ul>
 				<li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
+				<g:each in="${userGroupList}" status="i" var="accountUserGroupBeanInstance">
+					<li><g:link class="create" action="quarterReport" params="[groupId: accountUserGroupBeanInstance?.id, year: 2017]">${accountUserGroupBeanInstance?.name}</g:link></li>
+				</g:each>
 			</ul>
 		</div>
 		<div id="list-accountBalanceSheet" class="content scaffold-list" role="main">
@@ -76,7 +79,7 @@
 
 						<td class="currency"><g:formatNumber number="${balanceSheetListBeanListInstance?.getTotalBalance(monthInstance?.getId())}" type="currency" currencyCode="USD" /></td>
 
-						<td class="currency">40%</td>
+						<td class="currency"><g:formatNumber number="${Float.valueOf(balanceSheetListBeanListInstance?.getTotalBalance(monthInstance?.getId())) / Float.valueOf(totalBalanceMap?.get(monthInstance?.getId()))}" type="percent"/></td>
 
 					</g:each>
 
@@ -95,11 +98,25 @@
 
 							<td class="currency"><g:formatNumber number="${totalBalanceMap?.get(monthInstance?.getId())}" type="currency" currencyCode="USD" /></td>
 
-							<td class="currency">40%</td>
+							<td class="currency"><g:formatNumber number="${(k == 0 ? 0 : (Float.valueOf(totalBalanceMap?.get(monthList.get(k).getId())) - Float.valueOf(totalBalanceMap?.get(monthList.get(k-1).getId()))) / Float.valueOf(totalBalanceMap?.get(monthList.get(k-1).getId())))}" type="percent"/></td>
 
 						</g:each>
 
 					</tr>
+
+				<tr class="totalGreen">
+
+					<td><b>Running Diff</b></td>
+
+					<g:each in="${monthList}" status="k" var="monthInstance">
+
+						<td class="currency"><g:formatNumber number="${(k == 0 ? 0 : (Float.valueOf(totalBalanceMap?.get(monthList.get(k).getId())) - Float.valueOf(totalBalanceMap?.get(monthList.get(0).getId()))))}" type="currency" currencyCode="USD" /></td>
+
+						<td class="currency"><g:formatNumber number="${(k == 0 ? 0 : (Float.valueOf(totalBalanceMap?.get(monthList.get(k).getId())) - Float.valueOf(totalBalanceMap?.get(monthList.get(0).getId()))) / Float.valueOf(totalBalanceMap?.get(monthList.get(0).getId())))}" type="percent"/></td>
+
+					</g:each>
+
+				</tr>
 				</tbody>
 			</table>
 			<div class="pagination">

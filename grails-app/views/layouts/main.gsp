@@ -19,7 +19,7 @@
 				<li><g:link class="${request.forwardURI.contains('/symbol') ? 'current' : ''}" controller="symbol">Symbols</g:link></li>
 				<li><g:link class="${request.forwardURI.contains('/holding') ? 'current' : ''}" controller="holding">Holdings</g:link></li>
 				<li><g:link class="${request.forwardURI.contains('/report') ? 'current' : ''}" controller="report">Reports</g:link></li>
-                <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet">Cash Flow</g:link></li>
+                <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="indexByYear">Cash Flow</g:link></li>
                 <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="quarterReport">Quarter Report</g:link></li>
                 <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="monthReport">Monthly Report</g:link></li>
 		    </ul>

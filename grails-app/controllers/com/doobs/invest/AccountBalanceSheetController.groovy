@@ -23,11 +23,19 @@ class AccountBalanceSheetController {
         // local variables
         Integer year = 2017;
         List<BalanceSheetListBean> balanceSheetListBeanList = null;
-        Integer groupId = 2;
         Map<Integer, BigDecimal> totalBalanceMap = new Hashtable<Integer, BigDecimal>();
         List<Month> monthList = null;
 
-        // get the list
+        // get the group id
+        Integer groupId = 2;
+        if (params.groupId) {
+            groupId = Integer.valueOf(params.groupId)
+        }
+
+        // get the group list
+        List<UserGroup> userGroupList = UserGroup.list()
+
+        // get the balance sheet bean list
         balanceSheetListBeanList = this.sqlService?.getQuarterlyBalanceSheetsReport(year, groupId);
 
         // get the month list and totals
@@ -49,7 +57,7 @@ class AccountBalanceSheetController {
         }
 
         // return
-        render model:[balanceSheetListBeanList: balanceSheetListBeanList, totalBalanceMap: totalBalanceMap, monthList: monthList], view: "quarterReport"
+        render model:[balanceSheetListBeanList: balanceSheetListBeanList, totalBalanceMap: totalBalanceMap, monthList: monthList, userGroupList: userGroupList], view: "quarterReport"
     }
 
     @Transactional

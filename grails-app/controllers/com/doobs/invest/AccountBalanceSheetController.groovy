@@ -21,7 +21,7 @@ class AccountBalanceSheetController {
     @Transactional
     def quarterReport(Integer max) {
         // local variables
-        Integer year = 2017;
+        Integer year = params.year ? Integer.parseInt(params?.year) : 2017
         List<BalanceSheetListBean> balanceSheetListBeanList = null;
         Map<Integer, BigDecimal> totalBalanceMap = new Hashtable<Integer, BigDecimal>();
         List<Month> monthList = null;
@@ -57,20 +57,59 @@ class AccountBalanceSheetController {
         }
 
         // return
-        render model:[balanceSheetListBeanList: balanceSheetListBeanList, totalBalanceMap: totalBalanceMap, monthList: monthList, userGroupList: userGroupList], view: "quarterReport"
+        render model:[balanceSheetListBeanList: balanceSheetListBeanList, totalBalanceMap: totalBalanceMap, monthList: monthList, userGroupList: userGroupList, year: year], view: "quarterReport"
+    }
+
+    def incomeReport(Integer max) {
+        // local variables
+        Integer year = params.year ? Integer.parseInt(params?.year) : 2017
+        List<BalanceSheetListBean> balanceSheetListBeanList = null;
+        Map<Integer, BigDecimal> totalBalanceMap = new Hashtable<Integer, BigDecimal>();
+        List<Month> monthList = null;
+        BigDecimal incomeTotal = new BigDecimal(0)
+        BigDecimal transferTotal = new BigDecimal(0)
+
+        // get the group id
+        Integer groupId = 2;
+        if (params.groupId) {
+            groupId = Integer.valueOf(params.groupId)
+        }
+
+        // get the group list
+        List<UserGroup> userGroupList = UserGroup.list()
+
+        // get the balance sheet bean list
+        balanceSheetListBeanList = this.sqlService?.getMonthlyBalanceSheetsReport(year, groupId);
+
+        // get the income and transfer totals
+        for (BalanceSheetListBean balanceSheetListBean : balanceSheetListBeanList) {
+            incomeTotal = incomeTotal.add(balanceSheetListBean.getTotalIncome());
+            transferTotal = transferTotal.add(balanceSheetListBean.getTotalTransfer());
+        }
+
+        // return
+        render model:[balanceSheetListBeanList: balanceSheetListBeanList, incomeTotal: incomeTotal, transferTotal: transferTotal, userGroupList: userGroupList, year: year], view: "incomeReport"
     }
 
     @Transactional
     def monthReport(Integer max) {
         // local variables
-        Integer year = 2017;
+        Integer year = params.year ? Integer.parseInt(params?.year) : 2017
         List<BalanceSheetListBean> balanceSheetListBeanList = null;
-        Integer groupId = 2;
         Map<Integer, BigDecimal> totalBalanceMap = new Hashtable<Integer, BigDecimal>();
         List<Month> monthList = null;
 
+        // get the group id
+        Integer groupId = 2;
+        if (params.groupId) {
+            groupId = Integer.valueOf(params.groupId)
+        }
+
         // get the list
         balanceSheetListBeanList = this.sqlService?.getMonthlyBalanceSheetsReport(year, groupId);
+
+        // get the group list
+        List<UserGroup> userGroupList = UserGroup.list()
 
         // get the month list and totals
         if ((balanceSheetListBeanList != null) && (balanceSheetListBeanList.size() > 0)) {
@@ -91,7 +130,7 @@ class AccountBalanceSheetController {
         }
 
         // return
-        render model:[balanceSheetListBeanList: balanceSheetListBeanList, totalBalanceMap: totalBalanceMap, monthList: monthList], view: "monthReport"
+        render model:[balanceSheetListBeanList: balanceSheetListBeanList, totalBalanceMap: totalBalanceMap, monthList: monthList, userGroupList: userGroupList, year: year], view: "monthReport"
     }
 
     @Transactional
@@ -114,7 +153,7 @@ class AccountBalanceSheetController {
             totalTransfer += accountBalanceSheet?.transfer;
         }
 
-        respond accountBalanceSheetList, model:[accountUserBeanList: accountUserBeanList, accountBalanceSheetInstanceCount: accountBalanceSheetList?.size(), totalIncome: totalIncome, totalTransfer: totalTransfer], view: "index"
+        respond accountBalanceSheetList, model:[accountUserBeanList: accountUserBeanList, accountBalanceSheetInstanceCount: accountBalanceSheetList?.size(), totalIncome: totalIncome, totalTransfer: totalTransfer, year: year], view: "index"
     }
 
     def show(AccountBalanceSheet accountBalanceSheetInstance) {

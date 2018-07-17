@@ -90,4 +90,83 @@ public class BalanceSheetListBean {
         return total;
     }
 
+    /**
+     * get the total income from the lisr of account sheets
+     *
+     * @param accountId
+     * @return
+     */
+    public BigDecimal getTotalIncomeByAccount(Integer accountId) {
+        // local variables
+        BigDecimal total = new BigDecimal(0.0);
+
+        // loop and get total
+        for (AccountBalanceSheet sheet : this.accountBalanceSheetList) {
+            if (sheet.getAccount().getId() == accountId) {
+                total = total.add(sheet.getIncome());
+            }
+        }
+
+        // return
+        return total;
+    }
+
+    /**
+     * get the total transfer from the lisr of account sheets
+     *
+     * @param accountId
+     * @return
+     */
+    public BigDecimal getTotalTransferByAccount(Integer accountId) {
+        // local variables
+        BigDecimal total = new BigDecimal(0.0);
+
+        // loop and get total
+        for (AccountBalanceSheet sheet : this.accountBalanceSheetList) {
+            if (sheet.getAccount().getId() == accountId) {
+                total = total.add(sheet.getTransfer());
+            }
+        }
+
+        // return
+        return total;
+    }
+
+    /**
+     * get the total income from the lisr of account sheets
+     *
+     * @return
+     */
+    public BigDecimal getTotalIncome() {
+        // local variables
+        BigDecimal total = new BigDecimal(0.0);
+
+        // loop and get total
+        for (AccountBalanceSheet sheet : this.accountBalanceSheetList) {
+            total = total.add(sheet.getIncome());
+        }
+
+        // return
+        return total;
+    }
+
+    /**
+     * get the total transfer from the lisr of account sheets
+     *
+     * @return
+     */
+    public BigDecimal getTotalTransfer() {
+        // local variables
+        BigDecimal total = new BigDecimal(0.0);
+
+        // loop and get total
+        for (AccountBalanceSheet sheet : this.accountBalanceSheetList) {
+            total = total.add(sheet.getTransfer());
+        }
+
+        // return
+        return total;
+    }
+
+
 }

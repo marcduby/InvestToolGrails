@@ -40,7 +40,8 @@ class Month {
 
 	static namedQueries = {
 		loadByYear { Integer year ->
-			eq 'id' / 100, year
+			gte 'id' , (year * 100)
+			le 'id', ((year + 1) * 100)
 		}
 	}
 

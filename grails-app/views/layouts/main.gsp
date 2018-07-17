@@ -13,15 +13,18 @@
 		    <ul id="supernav">
 			  	<li><g:link class="${request.forwardURI.contains('/about') ? 'current' : ''}" controller="about" action="info">About</g:link></li>
 				<li><g:link class="${request.forwardURI.contains('/account') ? 'current' : ''}" controller="account">Accounts</g:link></li>
-				<li><g:link class="${request.forwardURI.contains('/industry') ? 'current' : ''}" controller="industry">Industries</g:link></li>
 				<li><g:link class="${request.forwardURI.contains('/user') ? 'current' : ''}" controller="user">Users</g:link></li>
 				<li><g:link class="${request.forwardURI.contains('/security') ? 'current' : ''}" controller="security">Securities</g:link></li>
 				<li><g:link class="${request.forwardURI.contains('/symbol') ? 'current' : ''}" controller="symbol">Symbols</g:link></li>
 				<li><g:link class="${request.forwardURI.contains('/holding') ? 'current' : ''}" controller="holding">Holdings</g:link></li>
 				<li><g:link class="${request.forwardURI.contains('/report') ? 'current' : ''}" controller="report">Reports</g:link></li>
-                <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="indexByYear">Cash Flow</g:link></li>
-                <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="quarterReport">Quarter Report</g:link></li>
-                <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="monthReport">Monthly Report</g:link></li>
+                <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="indexByYear" params="[year:2017]">Cash 2017</g:link></li>
+                <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="indexByYear" params="[year:2018]">Cash 2018</g:link></li>
+                <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="quarterReport" params="[year:Calendar.getInstance().get(Calendar.YEAR)]">Quarters</g:link></li>
+                <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="monthReport" params="[year:2017]">Month 2017</g:link></li>
+                <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="monthReport" params="[year:2018]">Month2018</g:link></li>
+                <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="incomeReport" params="[year:2017]">Income 2017</g:link></li>
+                <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="incomeReport" params="[year:2018]">Income 2018</g:link></li>
 		    </ul>
 		</div>
         <div id="spinner" class="spinner" style="display:none;">

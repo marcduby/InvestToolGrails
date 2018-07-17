@@ -16,7 +16,7 @@
 			<g:each in="${accountUserBeanList}" status="i" var="accountUserBeanInstance">
 				<ul>
 					<g:each in="${accountUserBeanInstance?.accountBeanList}" status="j" var="accountBeanInstance">
-						<li><g:link class="create" action="indexByYear" params="[accountId: accountBeanInstance?.accountId, year: 2017]">${accountUserBeanInstance?.initial} - ${accountBeanInstance?.name}</g:link></li>
+						<li><g:link class="create" action="indexByYear" params="[accountId: accountBeanInstance?.accountId, year: year]">${accountUserBeanInstance?.initial} - ${accountBeanInstance?.name}</g:link></li>
 					</g:each>
 				</ul>
 			</g:each>

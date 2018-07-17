@@ -11,7 +11,7 @@
 	<body>
 		<a href="#list-accountBalanceSheet" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
 
-		<g:render template="familyListNavigation" model="[userGroupList: userGroupList, year: year, action: 'monthReport']"/>
+		<g:render template="familyListNavigation" model="[userGroupList: userGroupList, year: year, action: 'incomeReport']"/>
 
 		<div id="list-accountBalanceSheet" class="content scaffold-list" role="main">
 			<h1><g:message code="default.list.label" args="[entityName]" /></h1>
@@ -27,16 +27,11 @@
 					
 						<th>${balanceSheetListBeanListInstance?.accountType?.name}</th>
 
-						<g:each in="${balanceSheetListBeanListInstance.getMonthList()}" status="i" var="monthInstance">
+						<th>Income</th>
 
-							<g:if test="${jj == 0}">
-								<th class="currency">${monthInstance?.getShortMonthName()}</th>
-							</g:if>
-							<g:else>
-								<th class="currency">&nbsp;</th>
-							</g:else>
+						<th>Transfer</th>
 
-						</g:each>
+						<th>% Return</th>
 
 					</tr>
 				</thead>
@@ -47,11 +42,11 @@
 					
 						<td>${com.doobs.invest.Account.get(accountId)?.user?.name.substring(0, 1)} - ${com.doobs.invest.Account.get(accountId)?.name}</td>
 
-						<g:each in="${balanceSheetListBeanListInstance?.getMonthList()}" status="k" var="monthInstance">
+						<td><g:formatNumber number="${balanceSheetListBeanListInstance.getTotalIncomeByAccount(accountId)}" type="currency" currencyCode="USD" /></td>
 
-							<td class="currency"><g:formatNumber number="${balanceSheetListBeanListInstance?.getBalanceSheetByYearAndAccountId(monthInstance?.getId(), accountId)?.totalBalance}" type="currency" currencyCode="USD" /></td>
+						<td><g:formatNumber number="${balanceSheetListBeanListInstance.getTotalTransferByAccount(accountId)}" type="currency" currencyCode="USD" /></td>
 
-						</g:each>
+						<td>&nbsp;</td>
 
 					</tr>
 				</g:each>
@@ -60,11 +55,11 @@
 
 					<td><b>Total</b></td>
 
-					<g:each in="${balanceSheetListBeanListInstance?.getMonthList()}" status="k" var="monthInstance">
+					<td><g:formatNumber number="${balanceSheetListBeanListInstance.getTotalIncome()}" type="currency" currencyCode="USD" /></td>
 
-						<td class="currency"><g:formatNumber number="${balanceSheetListBeanListInstance?.getTotalBalance(monthInstance?.getId())}" type="currency" currencyCode="USD" /></td>
+					<td><g:formatNumber number="${balanceSheetListBeanListInstance.getTotalTransfer()}" type="currency" currencyCode="USD" /></td>
 
-					</g:each>
+					<td>&nbsp;</td>
 
 				</tr>
 
@@ -77,11 +72,11 @@
 
 						<td><b>Total All</b></td>
 
-						<g:each in="${monthList}" status="k" var="monthInstance">
+						<td><b><g:formatNumber number="${incomeTotal}" type="currency" currencyCode="USD" /></b></td>
 
-							<td class="currency"><g:formatNumber number="${totalBalanceMap?.get(monthInstance?.getId())}" type="currency" currencyCode="USD" /></td>
+						<td><b><g:formatNumber number="${transferTotal}" type="currency" currencyCode="USD" /></b></td>
 
-						</g:each>
+						<td><b>&nbsp;</b></td>
 
 					</tr>
 				</tbody>

@@ -10,14 +10,17 @@
 	</head>
 	<body>
 		<a href="#list-accountBalanceSheet" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-		<div class="nav" role="navigation">
-			<ul>
-				<li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-				<g:each in="${userGroupList}" status="i" var="accountUserGroupBeanInstance">
-					<li><g:link class="create" action="quarterReport" params="[groupId: accountUserGroupBeanInstance?.id, year: 2017]">${accountUserGroupBeanInstance?.name}</g:link></li>
-				</g:each>
-			</ul>
-		</div>
+
+	<div class="nav" role="navigation">
+		<ul>
+			<g:each in="${(2015..2019)}" var="yearId">
+				<li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="quarterReport" params="[year:yearId]">Quarter ${yearId}</g:link></li>
+			</g:each>
+		</ul>
+	</div>
+
+		<g:render template="familyListNavigation" model="[userGroupList: userGroupList, year: year, action: 'quarterReport']"/>
+
 		<div id="list-accountBalanceSheet" class="content scaffold-list" role="main">
 			<h1><g:message code="default.list.label" args="[entityName]" /></h1>
 			<g:if test="${flash.message}">
@@ -64,7 +67,7 @@
 
 							<td class="currency"><g:formatNumber number="${balanceSheetListBeanListInstance?.getBalanceSheetByYearAndAccountId(monthInstance?.getId(), accountId)?.totalBalance}" type="currency" currencyCode="USD" /></td>
 
-							<td class="currency">40%</td>
+							<td class="currency">&nbsp;</td>
 
 						</g:each>
 

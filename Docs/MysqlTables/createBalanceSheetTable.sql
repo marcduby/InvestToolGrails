@@ -26,5 +26,13 @@ create table inv_month (
 );
 
 
+-- modifications for CD balance
+alter table inv_balance_sheet add cd_balance float(10,2) default 0.0;
+
+-- update accounts
+update inv_balance_sheet set cd_balance = total_balance - cash_balance where account_id = 29 and cash_balance > 0;
+update inv_balance_sheet set cd_balance = total_balance - cash_balance where account_id = 27 and cash_balance > 0;
+
+
 -- sample data
 

@@ -31,8 +31,23 @@ class RestInvestServiceIntegrationTests {
 		
 		log.info "got response: " + responseString
 	}
-	
-	
+
+
+	@Test
+	void testGetInvestQuoteStringIexTrading() {
+		String symbol = "msft"
+		InvestQuoteBean investQuoteBean = null
+
+		// get the response
+		investQuoteBean = this.restInvestService?.getInvestQuoteStringIexTRading(symbol)
+
+		// test the response
+		assertNotNull investQuoteBean
+
+		log.info "got response: " + investQuoteBean
+	}
+
+
 	@Test
 	void testGetInvestDividendQuoteString() {
 		String symbol = "msft"
@@ -82,7 +97,7 @@ class RestInvestServiceIntegrationTests {
 	
 	@Test
 	void testGetInvestQuoteBean() {
-		String symbol = "msft"
+		String symbol = "MSFT"
 		InvestQuoteBean bean = null
 		
 		// parse the bean
@@ -90,11 +105,12 @@ class RestInvestServiceIntegrationTests {
 		
 		// test
 		assertNotNull bean
-		assertEquals "1.15", bean.yearlyDividend
+		assertEquals "1.68", bean.yearlyDividend
 		assertEquals "MSFT", bean.symbol
+		assertEquals "105.95", bean.price
 		
 		// log
-		log.info "the symbol: " + bean?.symbol + " has dividend of: " + bean?.yearlyDividend
+		System.out.println("the symbol: " + bean?.symbol + " has dividend of: " + bean?.yearlyDividend + " and a price: " + bean?.price)
 		
 	}
 	

@@ -37,7 +37,9 @@
 						<g:sortableColumn class="currency" property="totalBalance" title="${message(code: 'accountBalanceSheet.totalBalance.label', default: 'Total Balance')}" />
 					
 						<g:sortableColumn class="currency" property="cashBalance" title="${message(code: 'accountBalanceSheet.cashBalance.label', default: 'Cash Balance')}" />
-					
+
+						<g:sortableColumn class="currency" property="cdBalance" title="${message(code: 'accountBalanceSheet.cdBalance.label', default: 'CD Balance')}" />
+
 						<g:sortableColumn class="currency" property="income" title="${message(code: 'accountBalanceSheet.income.label', default: 'Income')}" />
 					
 						<g:sortableColumn class="currency" property="transfer" title="${message(code: 'accountBalanceSheet.transfer.label', default: 'Transfer')}" />
@@ -58,6 +60,8 @@
 
 						<td class="currency"><g:formatNumber number="${accountBalanceSheetInstance?.cashBalance}" type="currency" currencyCode="USD" /></td>
 
+						<td class="currency"><g:formatNumber number="${accountBalanceSheetInstance?.cdBalance}" type="currency" currencyCode="USD" /></td>
+
 						<td class="currency"><g:formatNumber number="${accountBalanceSheetInstance?.income}" type="currency" currencyCode="USD" /></td>
 
 						<td class="currency"><g:formatNumber number="${accountBalanceSheetInstance?.transfer}" type="currency" currencyCode="USD" /></td>
@@ -69,6 +73,7 @@
 
 				<tr class="totalGreen">
 					<td><b>Total</b></td>
+					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>

@@ -8,6 +8,7 @@ class AccountBalanceSheet {
 	BigDecimal cashBalance
 	BigDecimal income
 	BigDecimal transfer
+	BigDecimal cdBalance
 	Boolean skip;
 
 	// automatic variables
@@ -27,6 +28,7 @@ class AccountBalanceSheet {
 		month nullable:false
 		totalBalance nullable:false, scale: 2
 		cashBalance nullable:false, scale: 2
+		cdBalance nullable:false, scale: 2
 		income nullable:false, scale: 2
 		transfer nullable:false, scale: 2
     }
@@ -67,6 +69,7 @@ class AccountBalanceSheet {
 		month 			column: 'month_id', fetch: 'join'
 		totalBalance	column: 'total_balance'
 		cashBalance		column: 'cash_balance'
+		cdBalance		column: 'cd_balance'
 		income			column: 'income'
 		transfer		column: 'transfer'
 		skip			column: 'skip'

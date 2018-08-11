@@ -1,7 +1,8 @@
 package com.doobs.invest
 
-import groovy.text.SimpleTemplateEngine
+import com.doobs.invest.parser.IexTradingJsonParser
 import grails.transaction.Transactional
+import groovy.text.SimpleTemplateEngine
 
 @Transactional
 class RestInvestService {
@@ -25,14 +26,34 @@ class RestInvestService {
 		
 		return oracle
     }
-	
+
+//	public InvestQuoteBean getInvestQuoteStringIexTRading(String symbol) {
+//		String quoteURL = "http://api.iextrading.com/1.0/stock/" + symbol + "/quote";
+//		def restBuilder = new RestBuilder();
+//		InvestQuoteBean investQuoteBean = new InvestQuoteBean();
+//
+//		// make the call
+//		def resp = restBuilder.get(quoteURL)
+//
+//		// get the json
+//		JSONObject jsonObject = resp.json;
+//
+//		// build the bean
+//		investQuoteBean.price = jsonObject.get("latestPrice");
+//		investQuoteBean.symbol = symbol
+//
+//
+//		// return
+//		return investQuoteBean;
+//	}
+
 	/**
 	 * get the security quote of a stock symbol
 	 * 
 	 * @param symbol
 	 * @return
 	 */
-	InvestQuoteBean getInvestQuoteBean(String symbol) {
+	InvestQuoteBean getInvestQuoteBeanOld(String symbol) {
 		InvestQuoteBean bean = null
 		String responseString = null
 		
@@ -45,7 +66,31 @@ class RestInvestService {
 		// return
 		return bean
 	}
-	
+
+	/**
+	 * get the security quote of a stock symbol
+	 *
+	 * @param symbol
+	 * @return
+	 */
+	InvestQuoteBean getInvestQuoteBean(String symbol) {
+		InvestQuoteBean bean = new InvestQuoteBean();
+		bean.symbol = symbol;
+		IexTradingJsonParser iexTradingJsonParser = new IexTradingJsonParser();
+		String tempString = null;
+
+		// get the stock quote
+		tempString = iexTradingJsonParser.getStockQuote(symbol);
+		bean.price = tempString;
+
+		// get the yearly dividend
+		tempString = iexTradingJsonParser.getStockYearlyDividend(symbol)
+		bean.yearlyDividend = tempString;
+
+		// return
+		return bean
+	}
+
 	/**
 	 * parse a rest call response string
 	 * 
@@ -118,7 +163,12 @@ class RestInvestService {
 		
 		// for each security, get the price
 		securityList.each { Security security ->
-			this.getAndSaveSecurityPrice(security?.id)
+			try {
+				this.getAndSaveSecurityPrice(security?.id)
+
+			} catch (InvestException exception) {
+				log.info("Got error for symbol: " + security?.currentSymbol + " so skipping: " + exception.getMessage())
+			}
 		}
 	}
 	
@@ -132,7 +182,10 @@ class RestInvestService {
 	Security getAndSaveSecurityPrice(Integer securityId) throws InvestException {
 		Security security = Security.get(securityId)
 		InvestQuoteBean bean = null
-		
+
+		// log
+		log.info "looking for security price for symbol: " + security?.currentSymbol
+
 		// get the invest bean for the security
 		bean = this.getInvestQuoteBean(security?.currentSymbol?.symbol)
 		

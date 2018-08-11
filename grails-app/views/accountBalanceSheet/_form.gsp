@@ -38,6 +38,15 @@
 
 </div>
 
+<div class="fieldcontain ${hasErrors(bean: accountBalanceSheetInstance, field: 'cdBalance', 'error')} required">
+	<label for="income">
+		<g:message code="accountBalanceSheet.income.label" default="CD Balance" />
+		<span class="required-indicator">*</span>
+	</label>
+	<g:field name="cdBalance" value="${fieldValue(bean: accountBalanceSheetInstance, field: 'cdBalance')}" required=""/>
+
+</div>
+
 <div class="fieldcontain ${hasErrors(bean: accountBalanceSheetInstance, field: 'income', 'error')} required">
 	<label for="income">
 		<g:message code="accountBalanceSheet.income.label" default="Income" />

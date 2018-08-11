@@ -56,6 +56,13 @@
 				</li>
 
 				<li class="fieldcontain">
+					<span id="cdBalance-label" class="property-label"><g:message code="accountBalanceSheet.cdBalance.label" default="CD Balance" /></span>
+
+					<span class="property-value" aria-labelledby="cdBalance-label"><g:formatNumber number="${accountBalanceSheetInstance?.cdBalance}" type="currency" currencyCode="USD" /></span>
+
+				</li>
+
+				<li class="fieldcontain">
 					<span id="income-label" class="property-label"><g:message code="accountBalanceSheet.income.label" default="Income" /></span>
 					
 						<span class="property-value" aria-labelledby="income-label"><g:formatNumber number="${accountBalanceSheetInstance?.income}" type="currency" currencyCode="USD" /></span>

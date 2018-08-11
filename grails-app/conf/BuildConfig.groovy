@@ -44,9 +44,13 @@ grails.project.dependency.resolution = {
         //mavenRepo "http://repository.codehaus.org"
         //mavenRepo "http://download.java.net/maven/2/"
         //mavenRepo "http://repository.jboss.com/maven2/"
+
+        mavenRepo 'https://raw.github.com/fernandezpablo85/scribe-java/mvn-repo/'
+        mavenRepo "http://repo.desirableobjects.co.uk/"
     }
 
     dependencies {
+        runtime 'mysql:mysql-connector-java:5.1.29'
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
         // runtime 'mysql:mysql-connector-java:5.1.29'
         // runtime 'org.postgresql:postgresql:9.3-1101-jdbc41'
@@ -61,6 +65,8 @@ grails.project.dependency.resolution = {
         compile ":scaffolding:2.1.2"
         compile ':cache:1.1.7'
         compile ":asset-pipeline:1.9.6"
+
+//        compile ':rest-client-builder:2.0.3'
 
         // plugins needed at runtime but not for compilation
         runtime ":hibernate4:4.3.5.5" // or ":hibernate:3.6.10.17"

@@ -1,5 +1,7 @@
 package com.doobs.invest
 
+import com.doobs.invest.bean.distribution.DistributionMonthBean
+import com.doobs.invest.bean.distribution.DistributionTypeBean
 import groovy.sql.Sql
 import javax.sql.DataSource
 import grails.transaction.Transactional
@@ -208,6 +210,8 @@ class SqlService {
 			Integer monthId = null;
 			if (quarterId == 0) {
 				monthId = ((year - 1) * 100) + 12;
+				// add
+				monthList.add(Month.get(monthId));
 
 			} else {
 				monthId = (year * 100) + quarterId;
@@ -241,6 +245,121 @@ class SqlService {
 
 			// add the account id list
 			balanceSheetListBeanMap.get(account.type.id).addToAccountIdList(accountId)
+		}
+
+		// return
+		return balanceSheetListBeanMap.values().toList()
+
+	}
+
+	/**
+	 * get the quarter list report
+	 *
+	 * @param year
+	 * @return
+	 */
+	public List<DistributionTypeBean> getDistributionBalanceSheetsReport(Integer year, Integer groupId) {
+		// local variables
+		Map<String, DistributionTypeBean> balanceSheetListBeanMap = new HashMap<String, DistributionTypeBean>();
+		List<Month> monthList = new ArrayList<Month>();
+		def monthIdList = [0, 3, 6, 9, 12];
+		List<Integer> accountIdList = null;
+
+		// build the month list
+		for (int quarterId : monthIdList) {
+			Integer monthId = null;
+			if (quarterId == 0) {
+				monthId = ((year - 1) * 100) + 12;
+				// add
+				monthList.add(Month.get(monthId));
+
+			} else {
+				monthId = (year * 100) + quarterId;
+				// add
+				monthList.add(Month.get(monthId));
+			}
+
+		}
+
+		// get the account list
+		accountIdList = this.getAccountIdListForGroup(groupId);
+
+		// create the list of account group types
+		List<String> accountGroups = ["CD", "Bank", "Invest", "Retire"];
+
+		// create the 4 map type lists
+		for (String groupType : accountGroups) {
+			DistributionTypeBean distributionTypeBean = new DistributionTypeBean();
+			distributionTypeBean.setGroupType(groupType);
+			distributionTypeBean.setMonthList(monthList)
+			balanceSheetListBeanMap.put(groupType, distributionTypeBean);
+		}
+
+		// build the balance sheet list beans
+		for (Integer accountId : accountIdList) {
+			// get the account balance sheet
+			Account account = Account.get(accountId);
+
+			// add the months needed
+			for (Month month : monthList) {
+				AccountBalanceSheet sheet = AccountBalanceSheet.loadByAccountIdAndMonthId(account.id, month.id).get();
+
+				// create a distrib month bean if applicable
+				if (sheet.account.type.id == 4) {
+					// if 401k, only retire entry
+					DistributionMonthBean distributionMonthBean = new DistributionMonthBean();
+					distributionMonthBean.month = sheet.month;
+					distributionMonthBean.account = account;
+					distributionMonthBean.totalBalance = sheet.totalBalance;
+					balanceSheetListBeanMap.get("Retire").accountBalanceSheetList.add(distributionMonthBean);
+					// add the account id list
+					balanceSheetListBeanMap.get("Retire").addToAccountIdList(accountId)
+
+				} else {
+					if (true) {
+						// one CD entry
+						DistributionMonthBean distributionMonthBean = new DistributionMonthBean();
+						distributionMonthBean.month = sheet.month;
+						distributionMonthBean.account = account;
+						distributionMonthBean.totalBalance = sheet.cdBalance;
+						balanceSheetListBeanMap.get("CD").accountBalanceSheetList.add(distributionMonthBean);
+						// add the account id list
+						balanceSheetListBeanMap.get("CD").addToAccountIdList(accountId)
+					}
+
+					if (sheet.account.type.id == 3) {
+						// if bank, then cash and CD entry
+						DistributionMonthBean distributionMonthBean = new DistributionMonthBean();
+						distributionMonthBean.month = sheet.month;
+						distributionMonthBean.account = account;
+						distributionMonthBean.totalBalance = sheet.totalBalance - sheet.cdBalance;
+						balanceSheetListBeanMap.get("Bank").accountBalanceSheetList.add(distributionMonthBean);
+						// add the account id list
+						balanceSheetListBeanMap.get("Bank").addToAccountIdList(accountId)
+
+					} else if (sheet.account.type.id == 1) {
+						// if invest, then invest and CD entry
+						DistributionMonthBean distributionMonthBean = new DistributionMonthBean();
+						distributionMonthBean.month = sheet.month;
+						distributionMonthBean.account = account;
+						distributionMonthBean.totalBalance = sheet.totalBalance - sheet.cdBalance;
+						balanceSheetListBeanMap.get("Invest").accountBalanceSheetList.add(distributionMonthBean);
+						// add the account id list
+						balanceSheetListBeanMap.get("Invest").addToAccountIdList(accountId)
+
+					} else {
+						// for all other ira, one ira and one CD entry
+						DistributionMonthBean distributionMonthBean = new DistributionMonthBean();
+						distributionMonthBean.month = sheet.month;
+						distributionMonthBean.account = account;
+						distributionMonthBean.totalBalance = sheet.totalBalance - sheet.cdBalance;
+						balanceSheetListBeanMap.get("Retire").accountBalanceSheetList.add(distributionMonthBean);
+						// add the account id list
+						balanceSheetListBeanMap.get("Retire").addToAccountIdList(accountId)
+					}
+				}
+			}
+
 		}
 
 		// return

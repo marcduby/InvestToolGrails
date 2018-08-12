@@ -1,6 +1,7 @@
 package com.doobs.invest
 
-
+import com.doobs.invest.bean.distribution.DistributionMonthBean
+import com.doobs.invest.bean.distribution.DistributionTypeBean
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
@@ -27,7 +28,7 @@ class AccountBalanceSheetController {
         List<Month> monthList = null;
 
         // get the group id
-        Integer groupId = 2;
+        Integer groupId = 3;
         if (params.groupId) {
             groupId = Integer.valueOf(params.groupId)
         }
@@ -60,6 +61,48 @@ class AccountBalanceSheetController {
         render model:[balanceSheetListBeanList: balanceSheetListBeanList, totalBalanceMap: totalBalanceMap, monthList: monthList, userGroupList: userGroupList, year: year], view: "quarterReport"
     }
 
+    @Transactional
+    def distributionReport(Integer max) {
+        // local variables
+        Integer year = params.year ? Integer.parseInt(params?.year) : 2018
+        List<DistributionTypeBean> distributionTypeBeanList = null;
+        Map<Integer, BigDecimal> totalBalanceMap = new Hashtable<Integer, BigDecimal>();
+        List<Month> monthList = null;
+
+        // get the group id
+        Integer groupId = 3;
+        if (params.groupId) {
+            groupId = Integer.valueOf(params.groupId)
+        }
+
+        // get the group list
+        List<UserGroup> userGroupList = UserGroup.list()
+
+        // get the balance sheet bean list
+        distributionTypeBeanList = this.sqlService?.getDistributionBalanceSheetsReport(year, groupId);
+
+        // get the month list and totals
+        if ((distributionTypeBeanList != null) && (distributionTypeBeanList.size() > 0)) {
+            monthList = distributionTypeBeanList.get(0).monthList;
+
+            // loop to get all the totals
+            for (DistributionTypeBean bean : distributionTypeBeanList) {
+                for (DistributionMonthBean sheet : bean.accountBalanceSheetList) {
+                    if (totalBalanceMap.get(sheet.month.id) == null) {
+                        totalBalanceMap.put(sheet.month.id, new BigDecimal(0))
+                    }
+
+                    // add
+                    totalBalanceMap.put(sheet.month.id, totalBalanceMap.get(sheet.month.id).add(sheet.totalBalance))
+                }
+            }
+
+        }
+
+        // return
+        render model:[balanceSheetListBeanList: distributionTypeBeanList, totalBalanceMap: totalBalanceMap, monthList: monthList, userGroupList: userGroupList, year: year], view: "distribReport"
+    }
+
     def incomeReport(Integer max) {
         // local variables
         Integer year = params.year ? Integer.parseInt(params?.year) : 2017
@@ -70,7 +113,7 @@ class AccountBalanceSheetController {
         BigDecimal transferTotal = new BigDecimal(0)
 
         // get the group id
-        Integer groupId = 2;
+        Integer groupId = 3;
         if (params.groupId) {
             groupId = Integer.valueOf(params.groupId)
         }
@@ -94,18 +137,19 @@ class AccountBalanceSheetController {
     @Transactional
     def monthReport(Integer max) {
         // local variables
-        Integer year = params.year ? Integer.parseInt(params?.year) : 2017
+        Integer year = params.year ? Integer.parseInt(params?.year) : 2018
         List<BalanceSheetListBean> balanceSheetListBeanList = null;
         Map<Integer, BigDecimal> totalBalanceMap = new Hashtable<Integer, BigDecimal>();
         List<Month> monthList = null;
 
         // get the group id
-        Integer groupId = 2;
+        Integer groupId = 3;
         if (params.groupId) {
             groupId = Integer.valueOf(params.groupId)
         }
 
         // get the list
+        // goupings of balance sheet
         balanceSheetListBeanList = this.sqlService?.getMonthlyBalanceSheetsReport(year, groupId);
 
         // get the group list

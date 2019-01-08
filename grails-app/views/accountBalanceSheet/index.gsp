@@ -11,8 +11,12 @@
 		<a href="#list-accountBalanceSheet" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
 		<div class="nav" role="navigation">
 			<ul>
-				<li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
+				<g:each in="${(2008..2020)}" var="yearId">
+					<li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="indexByYear" params="[year:yearId]">Cash ${yearId}</g:link></li>
+				</g:each>
 			</ul>
+		</div>
+		<div class="nav" role="navigation">
 			<g:each in="${accountUserBeanList}" status="i" var="accountUserBeanInstance">
 				<ul>
 					<g:each in="${accountUserBeanInstance?.accountBeanList}" status="j" var="accountBeanInstance">

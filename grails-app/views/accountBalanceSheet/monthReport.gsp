@@ -11,6 +11,14 @@
 	<body>
 		<a href="#list-accountBalanceSheet" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
 
+		<div class="nav" role="navigation">
+			<ul>
+				<g:each in="${(2008..2020)}" var="yearId">
+					<li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="monthReport" params="[year:yearId]">Month ${yearId}</g:link></li>
+				</g:each>
+			</ul>
+		</div>
+
 		<g:render template="familyListNavigation" model="[userGroupList: userGroupList, year: year, action: 'monthReport']"/>
 
 		<div id="list-accountBalanceSheet" class="content scaffold-list" role="main">

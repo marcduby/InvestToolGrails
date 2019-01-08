@@ -39,6 +39,7 @@ html * {
 body {
 	background: #ffffff;
 	color: #333333;
+	font-size: 0.9em;			/* new font size for body */
 	margin: 0 auto;
 	max-width: 1580px;
 	overflow-x: hidden; /* prevents box-shadow causing a horizontal scrollbar in firefox when viewport < 960px wide */
@@ -160,6 +161,7 @@ img {
 .nav a {
 	color: #666666;
 	display: block;
+	font-size: 0.9em;			/* new font size for body */
 	padding: 0.25em 0.7em;
 	text-decoration: none;
 	   -moz-border-radius: 0.3em;

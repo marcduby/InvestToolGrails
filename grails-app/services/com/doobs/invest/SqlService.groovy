@@ -2,6 +2,8 @@ package com.doobs.invest
 
 import com.doobs.invest.bean.distribution.DistributionMonthBean
 import com.doobs.invest.bean.distribution.DistributionTypeBean
+import com.doobs.invest.bean.income.IncomeBean
+import com.doobs.invest.bean.income.YearlyReportBean
 import groovy.sql.Sql
 import javax.sql.DataSource
 import grails.transaction.Transactional
@@ -476,4 +478,53 @@ class SqlService {
 		return diversificationList
 	}
 
+	/**
+	 * get the yearly income report
+	 *
+	 * @return
+     */
+	public YearlyReportBean getYearlyIncomeReport(Integer groupId) {
+		// local variabls
+		YearlyReportBean yearlyReportBean = new YearlyReportBean();
+
+		// log
+		log.info("looking for yearly income report for all accounts")
+
+		// build the sql
+		def sqlString = """
+			select sum(balance.income) as income_total, account.account_id, account.name account_name,
+			account_type.account_type_id, account_type.name account_type_name, balance.month_id div 100 as year_id, link.group_id
+			from inv_balance_sheet balance, inv_account account, inv_month imonth, inv_account_type account_type, inv_user_group_link link
+			where balance.account_id = account.account_id
+			and balance.month_id = imonth.month_id
+			and account.account_type_id = account_type.account_type_id
+			and account.user_id = link.user_id
+			and balance.month_id div 100 > 2007
+			group by account.name, account_type.name, year_id, link.group_id
+			order by account_type.name, account.name, year_id, link.group_id;
+		"""
+
+		// log the sql string
+		log.info("the sql is: " + sqlString)
+
+		// execute the sql
+		def sql = new Sql(dataSource)
+		sql.eachRow(sqlString) { row ->
+			if (row.group_id == groupId) {
+				IncomeBean incomeBean = new IncomeBean();
+				incomeBean.setAccountId(row.account_id);
+				incomeBean.setAccountTypeId(row.account_type_id);
+				incomeBean.setAccountName(row.account_name);
+				incomeBean.setAccountTypeName(row.account_type_name)
+				incomeBean.setYear(row.year_id);
+				incomeBean.setIncomeTotal(row.income_total);
+
+				// add to the yearly report
+				yearlyReportBean.addIncomeBean(incomeBean);
+			}
+		}
+
+		// return
+		return yearlyReportBean;
+	}
 }

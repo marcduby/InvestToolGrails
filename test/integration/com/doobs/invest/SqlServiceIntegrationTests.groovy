@@ -1,5 +1,6 @@
 package com.doobs.invest
 
+import com.doobs.invest.bean.income.YearlyReportBean
 import org.apache.commons.logging.LogFactory
 import org.junit.After
 import org.junit.Before
@@ -44,6 +45,26 @@ class SqlServiceIntegrationTests {
 		// log
 		beanList.each { InvestDiversificationBean bean ->
 			log.info("got industry: " + bean?.name + " with total: " + bean?.amountTotal)
+		}
+	}
+
+	@Test
+	void testGetYearlyIncomeReport() {
+		Integer groupId = 3;
+		YearlyReportBean bean = this.sqlService?.getYearlyIncomeReport(groupId);
+
+		// test results
+		assertNotNull(bean)
+		assertNotNull bean.getYearList()
+		assertEquals 12, bean.getYearList().size()
+		assertNotNull(bean.getTotalIncomeByYearAndAcountType(new Long(2018), null).floatValue())
+		assertNotNull(bean.getTotalIncomeByYearAndAcountType(new Long(2018), new Integer(3)).floatValue())
+
+		// log
+		log.info("Got income total for 2018: " + bean.getTotalIncomeByYearAndAcountType(new Long(2018), null))
+		log.info("Got bank income total for 2018: " + bean.getTotalIncomeByYearAndAcountType(new Long(2018), new Integer(3)))
+		bean.getYearList().each { Long year ->
+			log.info("got year: " + year);
 		}
 	}
 

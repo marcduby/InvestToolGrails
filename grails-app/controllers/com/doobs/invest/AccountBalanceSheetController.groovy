@@ -2,6 +2,7 @@ package com.doobs.invest
 
 import com.doobs.invest.bean.distribution.DistributionMonthBean
 import com.doobs.invest.bean.distribution.DistributionTypeBean
+import com.doobs.invest.bean.income.YearlyReportBean
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
@@ -132,6 +133,32 @@ class AccountBalanceSheetController {
 
         // return
         render model:[balanceSheetListBeanList: balanceSheetListBeanList, incomeTotal: incomeTotal, transferTotal: transferTotal, userGroupList: userGroupList, year: year], view: "incomeReport"
+    }
+
+    /**
+     * get the income yearly report
+     *
+     * @param max
+     * @return
+     */
+    def yearlyIncomeReport(Integer max) {
+        // local variables
+        YearlyReportBean yearlyReportBean = null;
+
+        // get the group id
+        Integer groupId = 3;
+        if (params.groupId) {
+            groupId = Integer.valueOf(params.groupId)
+        }
+
+        // get the group list
+        List<UserGroup> userGroupList = UserGroup.list()
+
+        // get the balance sheet bean list
+        yearlyReportBean = this.sqlService?.getYearlyIncomeReport(groupId)
+
+        // return
+        render model:[yearlyReportBeanInstance: yearlyReportBean, userGroupList: userGroupList], view: "yearlyIncomeReport"
     }
 
     @Transactional

@@ -25,6 +25,7 @@
                 <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="monthReport" params="[year:2018]">Month2018</g:link></li>
                 <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="incomeReport" params="[year:2017]">Income 2017</g:link></li>
                 <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="incomeReport" params="[year:2018]">Income 2018</g:link></li>
+                <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="incomeReport" params="[year:2019]">Income 2019</g:link></li>
 		    </ul>
 		</div>
         <div id="spinner" class="spinner" style="display:none;">

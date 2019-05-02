@@ -124,7 +124,7 @@ public class YearlyReportBean {
     }
 
     /**
-     * get the total by year
+     * get the income total by year
      *
      * @param yearId
      * @param accountTypeId
@@ -140,12 +140,50 @@ public class YearlyReportBean {
 
             // add if account type matches
             if (accountTypeId != null) {
+                if (item.get(yearId) == null) {
+                    String dude = "test";
+                }
+
                 if (item.get(yearId).getAccountTypeId().equals(accountTypeId)) {
                     total = total.add(item.get(yearId).getIncomeTotal());
                 }
 
             } else {
                 total = total.add(item.get(yearId).getIncomeTotal());
+            }
+        }
+
+        // return
+        return total;
+    }
+
+    /**
+     * get the balance total by year
+     *
+     * @param yearId
+     * @param accountTypeId
+     * @return
+     */
+    public BigDecimal getTotalBalanceByYearAndAcountType(Long yearId, Integer accountTypeId) {
+        BigDecimal total = new BigDecimal(0);
+
+        // iterate through the map values
+        Iterator<Map<Long, IncomeBean>> mapIterator = this.mapYearlyBeanListByAccount.values().iterator();
+        while (mapIterator.hasNext()) {
+            Map<Long, IncomeBean> item = mapIterator.next();
+
+            // add if account type matches
+            if (accountTypeId != null) {
+                if (item.get(yearId) == null) {
+                    String dude = "test";
+                }
+
+                if (item.get(yearId).getAccountTypeId().equals(accountTypeId)) {
+                    total = total.add(item.get(yearId).getBalanceTotal());
+                }
+
+            } else {
+                total = total.add(item.get(yearId).getBalanceTotal());
             }
         }
 

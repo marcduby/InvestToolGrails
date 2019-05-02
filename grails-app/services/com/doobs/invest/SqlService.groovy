@@ -501,7 +501,7 @@ class SqlService {
 			and account.user_id = link.user_id
 			and balance.month_id div 100 > 2007
 			group by account.name, account_type.name, year_id, link.group_id
-			order by account_type.name, account.name, year_id, link.group_id;
+			order by account_type.name, account.name, year_id, link.group_id
 		"""
 
 		// log the sql string
@@ -518,6 +518,58 @@ class SqlService {
 				incomeBean.setAccountTypeName(row.account_type_name)
 				incomeBean.setYear(row.year_id);
 				incomeBean.setIncomeTotal(row.income_total);
+
+				// add to the yearly report
+				yearlyReportBean.addIncomeBean(incomeBean);
+			}
+		}
+
+		// return
+		return yearlyReportBean;
+	}
+
+	/**
+	 * get the yearly income report
+	 *
+	 * @return
+	 */
+	public YearlyReportBean getYearlyBalanceReport(Integer groupId) {
+		// local variabls
+		YearlyReportBean yearlyReportBean = new YearlyReportBean();
+
+		// log
+		log.info("looking for yearly income report for all accounts")
+
+		// build the sql
+		def sqlString = """
+select balance.total_balance as total_balance, account.account_id, account.name account_name,
+account_type.account_type_id, account_type.name account_type_name, balance.month_id, (balance.month_id div 100) as year_id,
+link.group_id
+from inv_balance_sheet balance, inv_account account, inv_month imonth, inv_account_type account_type, inv_user_group_link link
+where balance.account_id = account.account_id
+and balance.month_id = imonth.month_id
+and account.account_type_id = account_type.account_type_id
+and account.user_id = link.user_id
+and balance.month_id div 100 > 2007
+and balance.month_id div 100 < year(sysdate())
+and balance.month_id % 100 = 12
+order by link.group_id, account_type.name, account.name, year_id
+		"""
+
+		// log the sql string
+		log.info("the sql is: " + sqlString)
+
+		// execute the sql
+		def sql = new Sql(dataSource)
+		sql.eachRow(sqlString) { row ->
+			if (row.group_id == groupId) {
+				IncomeBean incomeBean = new IncomeBean();
+				incomeBean.setAccountId(row.account_id);
+				incomeBean.setAccountTypeId(row.account_type_id);
+				incomeBean.setAccountName(row.account_name);
+				incomeBean.setAccountTypeName(row.account_type_name)
+				incomeBean.setYear(row.year_id);
+				incomeBean.setBalanceTotal(row.total_balance);
 
 				// add to the yearly report
 				yearlyReportBean.addIncomeBean(incomeBean);

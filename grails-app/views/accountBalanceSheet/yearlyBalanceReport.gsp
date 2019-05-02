@@ -11,7 +11,7 @@
 	<body>
 		<a href="#list-accountBalanceSheet" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
 
-		<g:render template="familyListNavigation" model="[userGroupList: userGroupList, year: year, action: 'yearlyIncomeReport']"/>
+		<g:render template="familyListNavigation" model="[userGroupList: userGroupList, year: year, action: 'yearlyBalanceReport']"/>
 
 		<div id="list-accountBalanceSheet" class="content scaffold-list" role="main">
 			<h1><g:message code="default.list.label" args="[entityName]" /></h1>
@@ -41,8 +41,8 @@
 						<td>${yearlyReportBeanInstance.getAccountName(accountId)}</td>
 
 					<g:each in="${yearlyReportBeanInstance.getYearList()}" status="ii" var="yearId">
-						<g:if test="${yearlyReportBeanInstance.getIncomeBeanByAccountYear(accountId, yearId).getIncomeTotal() > 0}">
-							<td><g:formatNumber number="${yearlyReportBeanInstance?.getIncomeBeanByAccountYear(accountId, yearId).getIncomeTotal()}" type="currency" currencyCode="USD" /></td>
+						<g:if test="${yearlyReportBeanInstance.getIncomeBeanByAccountYear(accountId, yearId).getBalanceTotal() > 0}">
+							<td><g:formatNumber number="${yearlyReportBeanInstance?.getIncomeBeanByAccountYear(accountId, yearId).getBalanceTotal()}" type="currency" currencyCode="USD" /></td>
 						</g:if>
 						<g:else>
 							<td>&nbsp;</td>
@@ -56,8 +56,8 @@
 					<td><b>Total</b></td>
 
 					<g:each in="${yearlyReportBeanInstance.getYearList()}" status="ii" var="yearId">
-						<g:if test="${yearlyReportBeanInstance?.getTotalIncomeByYearAndAcountType(yearId, accountTypeId) != null}">
-							<td><g:formatNumber number="${yearlyReportBeanInstance?.getTotalIncomeByYearAndAcountType(yearId, accountTypeId)}" type="currency" currencyCode="USD" /></td>
+						<g:if test="${yearlyReportBeanInstance?.getTotalBalanceByYearAndAcountType(yearId, accountTypeId) != null}">
+							<td><g:formatNumber number="${yearlyReportBeanInstance?.getTotalBalanceByYearAndAcountType(yearId, accountTypeId)}" type="currency" currencyCode="USD" /></td>
 						</g:if>
 						<g:else>
 							<td>&nbsp;</td>
@@ -76,7 +76,7 @@
 						<td><b>Total All</b></td>
 
 						<g:each in="${yearlyReportBeanInstance.getYearList()}" status="jj" var="yearId">
-							<td><g:formatNumber number="${yearlyReportBeanInstance.getTotalIncomeByYearAndAcountType(yearId, null)}" type="currency" currencyCode="USD" /></td>
+							<td><g:formatNumber number="${yearlyReportBeanInstance.getTotalBalanceByYearAndAcountType(yearId, null)}" type="currency" currencyCode="USD" /></td>
 						</g:each>
 
 					</tr>
@@ -85,8 +85,8 @@
 					<td><b>Difference</b></td>
 
 					<g:each in="${yearlyReportBeanInstance.getYearList()}" status="jj" var="yearId">
-						<g:if test="${yearlyReportBeanInstance.getYearList().contains(yearId - 1) && (yearlyReportBeanInstance.getTotalIncomeByYearAndAcountType(yearId-1, null) > 0)}">
-							<td><g:formatNumber number="${(yearlyReportBeanInstance.getTotalIncomeByYearAndAcountType(yearId, null) - yearlyReportBeanInstance.getTotalIncomeByYearAndAcountType(yearId-1, null)) / yearlyReportBeanInstance.getTotalIncomeByYearAndAcountType(yearId-1, null)}" type="percent"/></td>
+						<g:if test="${yearlyReportBeanInstance.getYearList().contains(yearId - 1) && (yearlyReportBeanInstance.getTotalBalanceByYearAndAcountType(yearId-1, null) > 0)}">
+							<td><g:formatNumber number="${(yearlyReportBeanInstance.getTotalBalanceByYearAndAcountType(yearId, null) - yearlyReportBeanInstance.getTotalBalanceByYearAndAcountType(yearId-1, null)) / yearlyReportBeanInstance.getTotalBalanceByYearAndAcountType(yearId-1, null)}" type="percent"/></td>
 						</g:if>
 						<g:else>
 							<td>&nbsp;</td>

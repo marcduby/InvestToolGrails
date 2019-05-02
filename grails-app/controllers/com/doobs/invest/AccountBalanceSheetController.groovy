@@ -161,6 +161,32 @@ class AccountBalanceSheetController {
         render model:[yearlyReportBeanInstance: yearlyReportBean, userGroupList: userGroupList], view: "yearlyIncomeReport"
     }
 
+    /**
+     * get the net worth by year report
+     *
+     * @param max
+     * @return
+     */
+    def yearlyBalanceReport(Integer max) {
+        // local variables
+        YearlyReportBean yearlyReportBean = null;
+
+        // get the group id
+        Integer groupId = 3;
+        if (params.groupId) {
+            groupId = Integer.valueOf(params.groupId)
+        }
+
+        // get the group list
+        List<UserGroup> userGroupList = UserGroup.list()
+
+        // get the balance sheet bean list
+        yearlyReportBean = this.sqlService?.getYearlyBalanceReport(groupId)
+
+        // return
+        render model:[yearlyReportBeanInstance: yearlyReportBean, userGroupList: userGroupList], view: "yearlyBalanceReport"
+    }
+
     @Transactional
     def monthReport(Integer max) {
         // local variables

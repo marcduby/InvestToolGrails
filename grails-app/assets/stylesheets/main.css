@@ -485,6 +485,10 @@ th.desc a {
 	background: #ffffcc;
 }
 
+.totalGrey {
+	background: #cccccc;
+}
+
 th:hover, tr:hover {
 	background: #E1F2B6;
 }

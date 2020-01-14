@@ -1,5 +1,7 @@
 package com.doobs.invest
 
+import com.doobs.invest.bean.stock.AlphaAdvantageStockBean
+import com.doobs.invest.parser.AlpahAdvantageJsonParser
 import com.doobs.invest.parser.IexTradingJsonParser
 import grails.transaction.Transactional
 import groovy.text.SimpleTemplateEngine
@@ -160,7 +162,7 @@ class RestInvestService {
 		
 		// get the security id
 		securityList = this.sqlService?.getSecurityListNeedingQuoteForDate(new Date())
-		
+
 		// for each security, get the price
 		securityList.each { Security security ->
 			try {
@@ -170,6 +172,15 @@ class RestInvestService {
 				log.info("Got error for symbol: " + security?.currentSymbol + " so skipping: " + exception.getMessage())
 			}
 		}
+
+//		Security security = Security.get(17)
+//
+//			try {
+//				this.getAndSaveWeeklySecurityPrice(security?.id)
+//
+//			} catch (InvestException exception) {
+//				log.info("Got error for symbol: " + security?.currentSymbol + " so skipping: " + exception.getMessage())
+//			}
 	}
 	
 	/**
@@ -192,6 +203,7 @@ class RestInvestService {
 		// save the bean to the database
 		SecurityPrice securityPrice = new SecurityPrice(price: (bean?.price ? bean?.price : 0.0), security: security, symbol: security?.currentSymbol, 
 				yearlyDividend: (bean?.yearlyDividend ? bean?.yearlyDividend : 0.0), transactionDate: bean?.transactionDate)
+
 		if (!securityPrice.save(flush: true)) {
 			throw new InvestException("cound not save security price for security id: " + securityId + " with errors: " + securityPrice.errors)
 		} 
@@ -205,6 +217,128 @@ class RestInvestService {
 		// log
 		log.info "saved security price : " + securityPrice.price + " for symbol: " + securityPrice?.symbol
 		
+		// return
+		return security
+	}
+
+	/**
+	 * gets the security weekly price from the rest service and saves it to the database
+	 *
+	 * @param securityId
+	 * @return
+	 * @throws InvestException
+	 */
+	Security getAndSaveWeeklySecurityPrice(Integer securityId) throws InvestException {
+		Security security = Security.get(securityId)
+		List<AlphaAdvantageStockBean> alphaAdvantageStockBeanList = null;
+		AlpahAdvantageJsonParser alpahAdvantageJsonParser = new AlpahAdvantageJsonParser();
+		String symbol = security?.currentSymbol
+
+		// log
+		log.info "looking for weekly security price for symbol: " + symbol
+
+		// get the invest bean for the security
+		alphaAdvantageStockBeanList = alpahAdvantageJsonParser.getWeeklyStockQuoteList(symbol)
+
+		// log
+		log.info("got ORIGINAL security weekly price list of size: " + alphaAdvantageStockBeanList.size())
+
+		// trim, taking out this week
+		alphaAdvantageStockBeanList = alpahAdvantageJsonParser.returnOnlyPreviousWeeklyPrices(alphaAdvantageStockBeanList)
+
+		// log
+		log.info("got TRIMMED security weekly price list of size: " + alphaAdvantageStockBeanList.size())
+
+		// save the bean to the database
+		int logInterval = 20;
+		int count = 0;
+		for (AlphaAdvantageStockBean bean : alphaAdvantageStockBeanList) {
+			// find or create the bean
+			SecurityWeeklyPrice securityWeeklyPrice = SecurityWeeklyPrice.findOrCreateBySecurityAndDateString(security, bean.dateString);
+
+			if (securityWeeklyPrice.closePrice == null && securityWeeklyPrice.closePrice != bean.closePrice) {
+				// update the bean
+				securityWeeklyPrice.closePrice = bean.closePrice
+				securityWeeklyPrice.openPrice = bean.openPrice
+				securityWeeklyPrice.highPrice = bean.highPrice
+				securityWeeklyPrice.lowPrice = bean.lowPrice
+				securityWeeklyPrice.symbol = symbol
+				securityWeeklyPrice.volume = bean.volume
+				securityWeeklyPrice.adjustedClosePrice = bean.adjustedClosePrice
+				securityWeeklyPrice.dividendAmount = bean.dividendAmount
+				securityWeeklyPrice.weekDate = bean.date
+
+				// save the bean
+				if (!securityWeeklyPrice.save(flush: true)) {
+					throw new InvestException("could not save security weekly price for security id: " + securityId + " and date: " + bean.dateString + " with errors: " + securityPrice.errors)
+				}
+			}
+
+			// log if needed
+			count++;
+			if (count % logInterval == 0) {
+				log.info("Added " + count + " weekly price for symbol: " + symbol)
+			}
+
+
+		}
+//		SecurityPrice securityPrice = new SecurityPrice(price: (bean?.price ? bean?.price : 0.0), security: security, symbol: security?.currentSymbol,
+//				yearlyDividend: (bean?.yearlyDividend ? bean?.yearlyDividend : 0.0), transactionDate: bean?.transactionDate)
+
+//		if (!securityPrice.save(flush: true)) {
+//			throw new InvestException("cound not save security price for security id: " + securityId + " with errors: " + securityPrice.errors)
+//		}
+
+		// modify the security as well
+//		security.currentPrice = securityPrice
+//		if (!security.save(flush: true)) {
+//			throw new InvestException("cound not save security for id: " + securityId)
+//		}
+
+		// log
+		log.info "saved security weekly price list of size: " + alphaAdvantageStockBeanList.size() + " for symbol: " + symbol
+
+		// get the latest 52 rows of weekly prices
+		Collections.sort(alphaAdvantageStockBeanList);
+		Float currentPrice = null;
+		Float totalDividend = 0.0
+		Date lastDate = null
+
+		if (alphaAdvantageStockBeanList != null) {
+			if (alphaAdvantageStockBeanList.size() > 0) {
+				// set the current price as the most recent
+				currentPrice = alphaAdvantageStockBeanList.get(0).closePrice
+				lastDate = alphaAdvantageStockBeanList.get(0).date
+			}
+
+			// set the dividend to the sum of the last 52 entries
+			int dividendCount = (alphaAdvantageStockBeanList.size() > 52 ? 52 : alphaAdvantageStockBeanList.size())
+
+			for (int i = 0; i < dividendCount; i++) {
+				totalDividend = totalDividend + (alphaAdvantageStockBeanList.get(i).dividendAmount == null ? 0 : alphaAdvantageStockBeanList.get(i).dividendAmount)
+			}
+		}
+
+		// log
+		log.info "setting security price : " + currentPrice + " for symbol: " + security?.currentSymbol + " with dividend: " + totalDividend + " and date: " + lastDate
+
+		// save the bean to the database
+		SecurityPrice securityPrice = new SecurityPrice(price: (currentPrice ? currentPrice : 0.0), security: security, symbol: security?.currentSymbol,
+				yearlyDividend: (totalDividend ? totalDividend : 0.0), transactionDate: (lastDate ? lastDate : new Date()))
+
+		if (!securityPrice.save(flush: true)) {
+			throw new InvestException("cound not save security price for security id: " + securityId + " with errors: " + securityPrice.errors)
+		}
+
+		// modify the security as well
+		security.currentPrice = securityPrice
+		if (!security.save(flush: true)) {
+			throw new InvestException("cound not save security for id: " + securityId)
+		}
+
+		// log
+		log.info "saved security price : " + securityPrice.price + " for symbol: " + securityPrice?.symbol
+
 		// return
 		return security
 	}

@@ -139,17 +139,26 @@ public class YearlyReportBean {
             Map<Long, IncomeBean> item = mapIterator.next();
 
             // add if account type matches
+            // TODO - must have added this to troubleshoot null issue; can remve later?
             if (accountTypeId != null) {
                 if (item.get(yearId) == null) {
                     String dude = "test";
                 }
 
-                if (item.get(yearId).getAccountTypeId().equals(accountTypeId)) {
-                    total = total.add(item.get(yearId).getIncomeTotal());
+                // adding check that accoynt has rows for that year
+                IncomeBean bean = item.get(yearId);
+                if (bean != null) {
+                    if (bean.getAccountTypeId().equals(accountTypeId)) {
+                        total = total.add(bean.getIncomeTotal());
+
+                    }
                 }
 
             } else {
-                total = total.add(item.get(yearId).getIncomeTotal());
+                IncomeBean bean = item.get(yearId);
+                if (bean != null) {
+                    total = total.add(bean.getIncomeTotal());
+                }
             }
         }
 

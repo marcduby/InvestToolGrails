@@ -50,14 +50,16 @@
 					
 						<th class="alignRight"><g:message code="holding.industry.label" default="Percent" /></th>
 					
-						<th class="alignRight"><g:message code="holding.industry.label" default="Purchase Percent" /></th>
+						<th class="alignRight"><g:message code="holding.industry.label" default="Purchase %" /></th>
 					
 						<th class="alignRight"><g:message code="holding.industry.label" default="Purchase Total" /></th>
 					
 						<th class="alignRight"><g:message code="holding.industry.label" default="Total" /></th>
 					
 						<th class="alignRight"><g:message code="holding.industry.label" default="Yearly Dividend" /></th>
-					
+
+						<th class="alignRight"><g:message code="holding.industry.label" default="Refresh" /></th>
+
 					</tr>
 				</thead>
 				<tbody>
@@ -89,7 +91,9 @@
 						<td class="alignRight"><g:formatNumber number="${holdingInstance?.totalAmount}" type="currency" currencyCode="USD" /></td>
 					
 						<td class="alignRight"><g:formatNumber number="${holdingInstance?.totalDividend}" type="currency" currencyCode="USD" /></td>
-					
+
+						<td><g:link action="refreshPrices" id="${holdingInstance?.security?.id}"><g:formatDate format="yyyy-MM-dd" date="${holdingInstance?.security?.currentPrice?.transactionDate}"/></g:link></td>
+
 					</tr>
 				</g:each>
 				

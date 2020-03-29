@@ -78,9 +78,16 @@ public class AlpahAdvantageJsonParser {
         JsonObject jsonObject = null;
         JsonElement jsonElement = null;
         List<AlphaAdvantageStockBean> alphaAdvantageStockBeanList = null;
+        String errorKey = "Error Message";
 
         // get the json object
         jsonObject = this.getStockInformationJson(symbol, isDaily);
+
+        // throw error if got API error
+        if (jsonObject.has(errorKey)) {
+            String error = jsonObject.get(errorKey).toString();
+            throw new InvestException("Got API error for symbol: " + symbol + " with message: " + error);
+        }
 
         // get the quote
         if (jsonObject != null) {
@@ -163,7 +170,7 @@ public class AlpahAdvantageJsonParser {
         alphaAdvantageStockBean.setLowPrice(json.get(lowPriceJsonKey).getAsFloat());
         alphaAdvantageStockBean.setClosePrice(json.get(closePriceJsonKey).getAsFloat());
         alphaAdvantageStockBean.setAdjustedClosePrice(json.get(adjustedClosePriceJsonKey).getAsFloat());
-        alphaAdvantageStockBean.setVolume(json.get(volumeJsonKey).getAsInt());
+        alphaAdvantageStockBean.setVolume(json.get(volumeJsonKey).getAsLong());
         alphaAdvantageStockBean.setDividendAmount(json.get(dividendAmountJsonKey).getAsFloat());
 
         // return

@@ -15,7 +15,7 @@ public class AlphaAdvantageStockBean implements Comparable<AlphaAdvantageStockBe
     private Float highPrice;
     private Float lowPrice;
     private Float adjustedClosePrice;
-    private Integer volume;
+    private Long volume;
     private Float dividendAmount;
     private Date date;
     private String symbol;
@@ -100,11 +100,11 @@ public class AlphaAdvantageStockBean implements Comparable<AlphaAdvantageStockBe
         this.adjustedClosePrice = adjustedClosePrice;
     }
 
-    public Integer getVolume() {
+    public Long getVolume() {
         return volume;
     }
 
-    public void setVolume(Integer volume) {
+    public void setVolume(Long volume) {
         this.volume = volume;
     }
 
@@ -128,7 +128,7 @@ public class AlphaAdvantageStockBean implements Comparable<AlphaAdvantageStockBe
             return -1;
 
         } else {
-            return this.getDate().compareTo(other.getDate());
+            return -1 * this.getDate().compareTo(other.getDate());
         }
 
     }

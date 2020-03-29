@@ -9,7 +9,7 @@ class SecurityWeeklyPrice {
 	Float lowPrice
 	Float highPrice
 	Float adjustedClosePrice
-	Integer volume
+	Long volume
 	Float dividendAmount
 	Date weekDate
 	Security security

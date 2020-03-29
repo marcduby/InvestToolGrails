@@ -23,10 +23,11 @@ hibernate {
 environments {
     development {
         dataSource {
+            driverClassName = "com.mysql.jdbc.Driver"
             url = "jdbc:mysql://localhost/invest?zeroDateTimeBehavior=convertToNull&useUnicode=yes&characterEncoding=UTF-8"
-            username = "root"
-            password = "yoyoma"
-            dbCreate = "update" // one of 'create', 'create-drop', 'update', 'validate', ''
+            username = ""
+            password = ""
+            dbCreate = "validate" // one of 'create', 'create-drop', 'update', 'validate', ''
 
 //            dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
 //            url = "jdbc:h2:mem:devDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE"
@@ -34,16 +35,23 @@ environments {
     }
     test {
         dataSource {
-            dbCreate = "update"
-            url = "jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE"
+            driverClassName = "com.mysql.jdbc.Driver"
+            url = "jdbc:mysql://localhost/invest?zeroDateTimeBehavior=convertToNull&useUnicode=yes&characterEncoding=UTF-8"
+            username = ""
+            password = ""
+            dbCreate = "validate" // one of 'create', 'create-drop', 'update', 'validate', ''
+
+//            dbCreate = "update"
+//            url = "jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE"
         }
     }
     production {
         dataSource {
+            driverClassName = "com.mysql.jdbc.Driver"
             url = "jdbc:mysql://localhost/invest?zeroDateTimeBehavior=convertToNull&useUnicode=yes&characterEncoding=UTF-8"
-            username = "root"
-            password = "yoyoma"
-            dbCreate = "update" // one of 'create', 'create-drop', 'update', 'validate', ''
+            username = ""
+            password = ""
+            dbCreate = "validate" // one of 'create', 'create-drop', 'update', 'validate', ''
 
 //            dbCreate = "update"
 //            url = "jdbc:h2:prodDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE"

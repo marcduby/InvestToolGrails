@@ -157,30 +157,46 @@ class RestInvestService {
 	 * creates price quotes for the day's date for all securities that do not have any
 	 * 
 	 */
-	void createPriceQuotesForToday() throws InvestException {
-		List<Security> securityList = null
-		
-		// get the security id
-		securityList = this.sqlService?.getSecurityListNeedingQuoteForDate(new Date())
-
+	void createPriceQuotesForToday(Integer securityId) throws InvestException {
 		// for each security, get the price
-		securityList.each { Security security ->
+		if (securityId == null) {
+			List<Security> securityList = null
+
+			// get the security id
+			securityList = this.sqlService?.getSecurityListNeedingQuoteForDate(new Date())
+
+			securityList.each { Security security ->
+				try {
+					this.getAndSaveWeeklySecurityPrice(security?.id)
+
+				} catch (InvestException exception) {
+					log.info("Got error for symbol: " + security?.currentSymbol + " so skipping: " + exception.getMessage())
+				}
+			}
+
+		} else {
+			Security security = Security.get(securityId)
+
 			try {
-				this.getAndSaveSecurityPrice(security?.id)
+				this.getAndSaveWeeklySecurityPrice(security?.id)
 
 			} catch (InvestException exception) {
 				log.info("Got error for symbol: " + security?.currentSymbol + " so skipping: " + exception.getMessage())
 			}
 		}
 
-//		Security security = Security.get(17)
-//
+
+		// TODO - old and remove
+//		securityList.each { Security security ->
 //			try {
-//				this.getAndSaveWeeklySecurityPrice(security?.id)
+//				this.getAndSaveSecurityPrice(security?.id)
 //
 //			} catch (InvestException exception) {
 //				log.info("Got error for symbol: " + security?.currentSymbol + " so skipping: " + exception.getMessage())
 //			}
+//		}
+
+
 	}
 	
 	/**
@@ -269,7 +285,7 @@ class RestInvestService {
 				securityWeeklyPrice.weekDate = bean.date
 
 				// save the bean
-				if (!securityWeeklyPrice.save(flush: true)) {
+				if (!securityWeeklyPrice.save()) {
 					throw new InvestException("could not save security weekly price for security id: " + securityId + " and date: " + bean.dateString + " with errors: " + securityPrice.errors)
 				}
 			}
@@ -315,7 +331,10 @@ class RestInvestService {
 			int dividendCount = (alphaAdvantageStockBeanList.size() > 52 ? 52 : alphaAdvantageStockBeanList.size())
 
 			for (int i = 0; i < dividendCount; i++) {
-				totalDividend = totalDividend + (alphaAdvantageStockBeanList.get(i).dividendAmount == null ? 0 : alphaAdvantageStockBeanList.get(i).dividendAmount)
+				if (alphaAdvantageStockBeanList.get(i).dividendAmount != null && alphaAdvantageStockBeanList.get(i).dividendAmount > 0) {
+					Float beanDividend = (alphaAdvantageStockBeanList.get(i).dividendAmount == null ? 0 : alphaAdvantageStockBeanList.get(i).dividendAmount)
+					totalDividend = totalDividend + beanDividend
+				}
 			}
 		}
 
@@ -327,7 +346,7 @@ class RestInvestService {
 				yearlyDividend: (totalDividend ? totalDividend : 0.0), transactionDate: (lastDate ? lastDate : new Date()))
 
 		if (!securityPrice.save(flush: true)) {
-			throw new InvestException("cound not save security price for security id: " + securityId + " with errors: " + securityPrice.errors)
+			throw new InvestException("could not save security price for security id: " + securityId + " with errors: " + securityPrice.errors)
 		}
 
 		// modify the security as well

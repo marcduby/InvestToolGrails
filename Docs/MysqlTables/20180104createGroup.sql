@@ -43,6 +43,17 @@ insert into inv_user_group_link (user_id, group_id, name, last_updated, date_cre
   values((select user_id from inv_user where name = 'Queen'), (select user_group_id from inv_user_group where name = 'Apple'), 'link', sysdate(), sysdate(), 0);
 
 
+-- create group harold only
+insert into inv_user_group (name, description, last_updated, date_created, version) values('Banana', 'Banana', sysdate(), sysdate(), 0);
+
+insert into inv_user_group_link (user_id, group_id, name, last_updated, date_created, version)
+  values((select user_id from inv_user where name = 'Harold'), (select user_group_id from inv_user_group where name = 'Banana'), 'link', sysdate(), sysdate(), 0);
+
+-- create group buttercup only
+insert into inv_user_group (name, description, last_updated, date_created, version) values('Orange', 'Orange', sysdate(), sysdate(), 0);
+
+insert into inv_user_group_link (user_id, group_id, name, last_updated, date_created, version)
+  values((select user_id from inv_user where name = 'Buttercup'), (select user_group_id from inv_user_group where name = 'Orange'), 'link', sysdate(), sysdate(), 0);
 
 
 -- test

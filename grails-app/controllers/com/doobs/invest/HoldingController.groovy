@@ -14,8 +14,14 @@ class HoldingController {
     }
 	
 	def refreshPrices() {
-		log.info("in refresh controller service method call")
-		this.restInvestService?.createPriceQuotesForToday()
+        int securityId;
+
+        if (params.id) {
+            securityId = Integer.valueOf(params.id)
+        }
+
+		log.info("in refresh controller service method call with securityId: " + securityId)
+		this.restInvestService?.createPriceQuotesForToday(securityId)
 		
 		// redirect to the list
 		redirect(action: "list")

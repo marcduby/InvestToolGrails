@@ -9,6 +9,7 @@ class AccountBalanceSheet {
 	BigDecimal income
 	BigDecimal transfer
 	BigDecimal cdBalance
+	BigDecimal moneyMarket
 	Boolean skip;
 
 	// automatic variables
@@ -29,6 +30,7 @@ class AccountBalanceSheet {
 		totalBalance nullable:false, scale: 2
 		cashBalance nullable:false, scale: 2
 		cdBalance nullable:false, scale: 2
+		moneyMarket nullable:false, scale: 2
 		income nullable:false, scale: 2
 		transfer nullable:false, scale: 2
     }
@@ -70,6 +72,7 @@ class AccountBalanceSheet {
 		totalBalance	column: 'total_balance'
 		cashBalance		column: 'cash_balance'
 		cdBalance		column: 'cd_balance'
+		moneyMarket		column: 'money_market'
 		income			column: 'income'
 		transfer		column: 'transfer'
 		skip			column: 'skip'

@@ -39,11 +39,15 @@ grails.project.dependency.resolution = {
         grailsHome()
         mavenLocal()
         grailsCentral()
-        mavenCentral()
+//        mavenCentral()
         // uncomment these (or add new ones) to enable remote dependency resolution from public Maven repositories
         //mavenRepo "http://repository.codehaus.org"
         //mavenRepo "http://download.java.net/maven/2/"
         //mavenRepo "http://repository.jboss.com/maven2/"
+
+	mavenRepo "https://mvnrepository.com/artifact/"
+	mavenRepo "https://repo1.maven.org/maven2/"
+	mavenRepo "https://repo.maven.apache.org/maven2/"
 
         mavenRepo 'https://raw.github.com/fernandezpablo85/scribe-java/mvn-repo/'
         mavenRepo "http://repo.desirableobjects.co.uk/"
@@ -55,6 +59,7 @@ grails.project.dependency.resolution = {
         // runtime 'mysql:mysql-connector-java:5.1.29'
         // runtime 'org.postgresql:postgresql:9.3-1101-jdbc41'
         test "org.grails:grails-datastore-test-support:1.0-grails-2.4"
+compile group: 'org.ccil.cowan.tagsoup', name: 'tagsoup', version: '1.2'
     }
 
     plugins {
@@ -65,6 +70,7 @@ grails.project.dependency.resolution = {
         compile ":scaffolding:2.1.2"
         compile ':cache:1.1.7'
         compile ":asset-pipeline:1.9.6"
+// https://mvnrepository.com/artifact/org.ccil.cowan.tagsoup/tagsoup
 
 //        compile ':rest-client-builder:2.0.3'
 

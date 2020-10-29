@@ -56,6 +56,11 @@
 				</li>
 
 				<li class="fieldcontain">
+					<span id="moneyMarket-label" class="property-label"><g:message code="accountBalanceSheet.moneyMarket.label" default="Money Market" /></span>
+					<span class="property-value" aria-labelledby="cdBalance-label"><g:formatNumber number="${accountBalanceSheetInstance?.moneyMarket}" type="currency" currencyCode="USD" /></span>
+				</li>
+
+				<li class="fieldcontain">
 					<span id="cdBalance-label" class="property-label"><g:message code="accountBalanceSheet.cdBalance.label" default="CD Balance" /></span>
 
 					<span class="property-value" aria-labelledby="cdBalance-label"><g:formatNumber number="${accountBalanceSheetInstance?.cdBalance}" type="currency" currencyCode="USD" /></span>

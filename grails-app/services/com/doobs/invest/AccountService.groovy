@@ -85,6 +85,7 @@ class AccountService {
 				accountBalanceSheet.setMonth(month);
 				accountBalanceSheet.setCashBalance(0.0);
 				accountBalanceSheet.setCdBalance(0.0);
+				accountBalanceSheet.setMoneyMarket(0.0);
 				accountBalanceSheet.setTotalBalance(0.0);
 				accountBalanceSheet.setIncome(0.0);
 				accountBalanceSheet.setTransfer(0.0);

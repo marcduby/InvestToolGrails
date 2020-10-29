@@ -185,14 +185,19 @@ public class YearlyReportBean {
             if (accountTypeId != null) {
                 if (item.get(yearId) == null) {
                     String dude = "test";
-                }
+                } else {
 
                 if (item.get(yearId).getAccountTypeId().equals(accountTypeId)) {
+			if (item.get(yearId) != null) {
                     total = total.add(item.get(yearId).getBalanceTotal());
+			}
                 }
+		}
 
             } else {
+			if (item.get(yearId) != null) {
                 total = total.add(item.get(yearId).getBalanceTotal());
+			}
             }
         }
 

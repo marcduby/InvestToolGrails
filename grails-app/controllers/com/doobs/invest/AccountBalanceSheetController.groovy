@@ -245,12 +245,34 @@ class AccountBalanceSheetController {
         // add up the income and transfers
         Float totalIncome = 0.0;
         Float totalTransfer = 0.0;
-        for (AccountBalanceSheet accountBalanceSheet : accountBalanceSheetList) {
+        Float totalGainPercent = 0.0;
+        for (int index = 0; index < accountBalanceSheetList.size(); index++) {
+            AccountBalanceSheet accountBalanceSheet = accountBalanceSheetList.get(index)
             totalIncome += accountBalanceSheet?.income;
             totalTransfer += accountBalanceSheet?.transfer;
+            if (index > 0 && accountBalanceSheetList.get(index - 1)?.totalBalance != null) {
+                accountBalanceSheet.totalGain = accountBalanceSheet?.totalBalance - accountBalanceSheetList.get(index - 1)?.totalBalance
+
+                if (accountBalanceSheetList.get(index - 1)?.totalBalance > 0) {
+                    accountBalanceSheet.totalGainPercent = accountBalanceSheet.totalGain / accountBalanceSheetList.get(index - 1)?.totalBalance
+                } else {
+                    accountBalanceSheet.totalGainPercent = 0.0
+                }
+
+            } else {
+                accountBalanceSheet.totalGain = 0.0
+                accountBalanceSheet.totalGainPercent = 0.0
+            }
+
+            // set the total percent gain
+            if (index > 0 && accountBalanceSheetList.get(0)?.totalBalance != null && accountBalanceSheetList.get(0)?.totalBalance > 0) {
+                if (accountBalanceSheet?.totalBalance > 0) {
+                    totalGainPercent = (accountBalanceSheet?.totalBalance - accountBalanceSheetList.get(0)?.totalBalance) / accountBalanceSheetList.get(0)?.totalBalance;
+                }
+            }
         }
 
-        respond accountBalanceSheetList, model:[accountUserBeanList: accountUserBeanList, accountBalanceSheetInstanceCount: accountBalanceSheetList?.size(), totalIncome: totalIncome, totalTransfer: totalTransfer, year: year], view: "index"
+        respond accountBalanceSheetList, model:[accountUserBeanList: accountUserBeanList, accountBalanceSheetInstanceCount: accountBalanceSheetList?.size(), totalIncome: totalIncome, totalTransfer: totalTransfer, totalGainPercent: totalGainPercent, year: year], view: "index"
     }
 
     def show(AccountBalanceSheet accountBalanceSheetInstance) {

@@ -10,6 +10,8 @@ class AccountBalanceSheet {
 	BigDecimal transfer
 	BigDecimal cdBalance
 	BigDecimal moneyMarket
+	BigDecimal totalGain
+	BigDecimal totalGainPercent
 	Boolean skip;
 
 	// automatic variables
@@ -42,7 +44,7 @@ class AccountBalanceSheet {
 		return monthName
 	}
 	
-	static transients = ['longName', 'monthName']
+	static transients = ['longName', 'monthName', 'totalGain', 'totalGainPercent']
 
 	static namedQueries = {
 		loadByAccountId { Integer accountId ->

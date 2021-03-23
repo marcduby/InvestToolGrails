@@ -215,7 +215,7 @@ class AccountBalanceSheetController {
             // loop to get all the totals
             for (BalanceSheetListBean bean : balanceSheetListBeanList) {
                 for (AccountBalanceSheet sheet : bean.accountBalanceSheetList) {
-                    if (totalBalanceMap.get(sheet.month.id) == null) {
+                    if (sheet == null || totalBalanceMap.get(sheet.month.id) == null) {
                         totalBalanceMap.put(sheet.month.id, new BigDecimal(0))
                     }
 
@@ -245,13 +245,14 @@ class AccountBalanceSheetController {
         // add up the income and transfers
         Float totalIncome = 0.0;
         Float totalTransfer = 0.0;
+        Float totalGain = 0.0;
         Float totalGainPercent = 0.0;
         for (int index = 0; index < accountBalanceSheetList.size(); index++) {
             AccountBalanceSheet accountBalanceSheet = accountBalanceSheetList.get(index)
             totalIncome += accountBalanceSheet?.income;
             totalTransfer += accountBalanceSheet?.transfer;
             if (index > 0 && accountBalanceSheetList.get(index - 1)?.totalBalance != null) {
-                accountBalanceSheet.totalGain = accountBalanceSheet?.totalBalance - accountBalanceSheetList.get(index - 1)?.totalBalance
+                accountBalanceSheet.totalGain = accountBalanceSheet?.totalBalance - accountBalanceSheetList.get(index - 1)?.totalBalance - accountBalanceSheet?.transfer
 
                 if (accountBalanceSheetList.get(index - 1)?.totalBalance > 0) {
                     accountBalanceSheet.totalGainPercent = accountBalanceSheet.totalGain / accountBalanceSheetList.get(index - 1)?.totalBalance
@@ -267,12 +268,60 @@ class AccountBalanceSheetController {
             // set the total percent gain
             if (index > 0 && accountBalanceSheetList.get(0)?.totalBalance != null && accountBalanceSheetList.get(0)?.totalBalance > 0) {
                 if (accountBalanceSheet?.totalBalance > 0) {
-                    totalGainPercent = (accountBalanceSheet?.totalBalance - accountBalanceSheetList.get(0)?.totalBalance) / accountBalanceSheetList.get(0)?.totalBalance;
+                    totalGain = (accountBalanceSheet?.totalBalance - accountBalanceSheetList.get(0)?.totalBalance - totalTransfer)
+                    totalGainPercent = totalGain / accountBalanceSheetList.get(0)?.totalBalance;
                 }
             }
         }
 
-        respond accountBalanceSheetList, model:[accountUserBeanList: accountUserBeanList, accountBalanceSheetInstanceCount: accountBalanceSheetList?.size(), totalIncome: totalIncome, totalTransfer: totalTransfer, totalGainPercent: totalGainPercent, year: year], view: "index"
+        respond accountBalanceSheetList, model:[accountUserBeanList: accountUserBeanList, accountBalanceSheetInstanceCount: accountBalanceSheetList?.size(), totalIncome: totalIncome, totalTransfer: totalTransfer, totalGain: totalGain, totalGainPercent: totalGainPercent, year: year], view: "index"
+    }
+
+    @Transactional
+    def indexByDecade(Integer max) {
+        // get the year and account
+        Integer year = params.year ? Integer.parseInt(params?.year) : 2017
+        Integer accountId = params.accountId ? Integer.parseInt(params?.accountId) : 1
+
+        // get the account cach flow list
+        List<AccountBalanceSheet> accountBalanceSheetList = this.accountService?.getOrCreateDecadeAccountBalanceSheetList(accountId);
+
+        // get the user list
+        List<AccountUserBean> accountUserBeanList = this.sqlService?.getUserAndAccountsList();
+
+        // add up the income and transfers
+        Float totalIncome = 0.0;
+        Float totalTransfer = 0.0;
+        Float totalGain = 0.0;
+        Float totalGainPercent = 0.0;
+        for (int index = 0; index < accountBalanceSheetList.size(); index++) {
+            AccountBalanceSheet accountBalanceSheet = accountBalanceSheetList.get(index)
+            totalIncome = totalIncome + (accountBalanceSheet?.incomeTotalCummulatative ? accountBalanceSheet?.incomeTotalCummulatative : 0.0);
+            totalTransfer = totalTransfer + (accountBalanceSheet?.transferTotalCummulatative ? accountBalanceSheet?.transferTotalCummulatative : 0.0);
+            if (index > 0 && accountBalanceSheetList.get(index - 1)?.totalBalance != null) {
+                accountBalanceSheet.totalGain = accountBalanceSheet?.totalBalance - accountBalanceSheetList.get(index - 1)?.totalBalance - (accountBalanceSheet?.transferTotalCummulatative ? accountBalanceSheet?.transferTotalCummulatative : 0.0)
+
+                if (accountBalanceSheetList.get(index - 1)?.totalBalance > 0) {
+                    accountBalanceSheet.totalGainPercent = accountBalanceSheet.totalGain / accountBalanceSheetList.get(index - 1)?.totalBalance
+                } else {
+                    accountBalanceSheet.totalGainPercent = 0.0
+                }
+
+            } else {
+                accountBalanceSheet.totalGain = 0.0
+                accountBalanceSheet.totalGainPercent = 0.0
+            }
+
+            // set the total percent gain
+            if (index > 0 && accountBalanceSheetList.get(0)?.totalBalance != null && accountBalanceSheetList.get(0)?.totalBalance > 0) {
+                if (accountBalanceSheet?.totalBalance > 0) {
+                    totalGain = (accountBalanceSheet?.totalBalance - accountBalanceSheetList.get(0)?.totalBalance - totalTransfer)
+                    totalGainPercent = totalGain / accountBalanceSheetList.get(0)?.totalBalance;
+                }
+            }
+        }
+
+        respond accountBalanceSheetList, model:[accountUserBeanList: accountUserBeanList, accountBalanceSheetInstanceCount: accountBalanceSheetList?.size(), totalIncome: totalIncome, totalTransfer: totalTransfer, totalGain: totalGain, totalGainPercent: totalGainPercent, year: year, listType: "decade"], view: "index"
     }
 
     def show(AccountBalanceSheet accountBalanceSheetInstance) {

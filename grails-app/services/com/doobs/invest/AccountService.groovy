@@ -110,4 +110,66 @@ class AccountService {
 		// return
 		return accountBalanceSheetList;
 	}
+
+	/**
+	 * get the balance sheet rows for an account and the last 10 Decembers
+	 *
+	 * @param accountId
+     * @return
+     */
+	List<AccountBalanceSheet> getOrCreateDecadeAccountBalanceSheetList(int accountId) {
+		// local variables
+		List<AccountBalanceSheet> accountBalanceSheetList = new ArrayList<AccountBalanceSheet>();
+
+		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+
+		// get the account
+		Account account = Account.get(accountId);
+
+		for (int i = currentYear - 11; i < currentYear; i++) {
+			int monthId = i * 100 + 12;
+			Month month = Month.get(monthId)
+
+			AccountBalanceSheet accountBalanceSheet = AccountBalanceSheet.loadByAccountIdAndMonthId(accountId, monthId)?.get();
+
+			if (accountBalanceSheet == null) {
+				// if not exists, create and save
+				accountBalanceSheet = new AccountBalanceSheet();
+				accountBalanceSheet.setAccount(account);
+				accountBalanceSheet.setMonth(month);
+				accountBalanceSheet.setCashBalance(0.0);
+				accountBalanceSheet.setCdBalance(0.0);
+				accountBalanceSheet.setMoneyMarket(0.0);
+				accountBalanceSheet.setTotalBalance(0.0);
+				accountBalanceSheet.setIncome(0.0);
+				accountBalanceSheet.setTransfer(0.0);
+				accountBalanceSheet.setSkip(false);
+
+				// log
+				log.info("Create account balance sheet for account: " + accountId + " and month: " + monthId)
+
+				// save
+				// accountBalanceSheet.save(flush: true, failOnError: true)
+
+			} else {
+				// log
+				log.info("Load existing account decade balance sheet for account: " + accountId + " and month: " + monthId)
+			}
+
+
+			// get the total transfer for the year
+			BigDecimal transferTotalCummulative = this.sqlService.getTotalTransfer(account?.id, i);
+			accountBalanceSheet.setTransferTotalCummulatative(transferTotalCummulative)
+
+			// get the total transfer for the year
+			BigDecimal incomeTotalCummulative = this.sqlService.getTotalIncome(account?.id, i);
+			accountBalanceSheet.setIncomeTotalCummulatative(incomeTotalCummulative)
+
+			// add to list
+			accountBalanceSheetList.add(accountBalanceSheet);
+		}
+
+		// return
+		return accountBalanceSheetList;
+	}
 }

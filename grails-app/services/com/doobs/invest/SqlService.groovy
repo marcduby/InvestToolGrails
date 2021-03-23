@@ -500,7 +500,7 @@ class SqlService {
 			and account.account_type_id = account_type.account_type_id
 			and account.user_id = link.user_id
 			and balance.month_id div 100 > 2007
-			group by account.name, account_type.name, year_id, link.group_id
+			group by account.account_id, account_type.account_type_id, account.name, account_type.name, year_id, link.group_id
 			order by account_type.name, account.name, year_id, link.group_id
 		"""
 
@@ -578,5 +578,65 @@ order by link.group_id, account_type.name, account.name, year_id
 
 		// return
 		return yearlyReportBean;
+	}
+
+	/**
+	 * get the total transfer for an account for a year
+	 *
+	 * @return
+	 */
+	public BigDecimal getTotalTransfer(Integer accountId, Integer yearId) {
+		// local variabls
+		BigDecimal totalTransfer = null;
+
+		// log
+		log.info("looking for total transfer for an account " + accountId + " for a year " + yearId)
+
+		// build the sql
+		def sqlString = """
+select sum(transfer) as total_transfer from inv_balance_sheet where account_id = :accountId and floor(month_id /100) = :yearId
+		"""
+
+		// log the sql string
+		log.info("the sql is: " + sqlString)
+
+		// execute the sql
+		def sql = new Sql(dataSource)
+		sql.eachRow(sqlString, [accountId: accountId, yearId: yearId]) { row ->
+			totalTransfer = row.total_transfer
+		}
+
+		// return
+		return totalTransfer;
+	}
+
+	/**
+	 * get the total income for an account for a year
+	 *
+	 * @return
+	 */
+	public BigDecimal getTotalIncome(Integer accountId, Integer yearId) {
+		// local variabls
+		BigDecimal totalIncome = null;
+
+		// log
+		log.info("looking for total income for an account " + accountId + " for a year " + yearId)
+
+		// build the sql
+		def sqlString = """
+select sum(income) as total_income from inv_balance_sheet where account_id = :accountId and floor(month_id /100) = :yearId
+		"""
+
+		// log the sql string
+		log.info("the sql is: " + sqlString)
+
+		// execute the sql
+		def sql = new Sql(dataSource)
+		sql.eachRow(sqlString, [accountId: accountId, yearId: yearId]) { row ->
+			totalIncome = row.total_income
+		}
+
+		// return
+		return totalIncome;
 	}
 }

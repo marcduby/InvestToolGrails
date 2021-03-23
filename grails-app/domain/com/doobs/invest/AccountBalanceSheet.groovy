@@ -12,6 +12,8 @@ class AccountBalanceSheet {
 	BigDecimal moneyMarket
 	BigDecimal totalGain
 	BigDecimal totalGainPercent
+	BigDecimal incomeTotalCummulatative;
+	BigDecimal transferTotalCummulatative;
 	Boolean skip;
 
 	// automatic variables
@@ -20,9 +22,8 @@ class AccountBalanceSheet {
 	
 	public String toString() {
 		return this.getListName()
-	}
-	
-	public String getListName() {
+				BigDecimal transferTotalCummulatative = AccountBalanceSheet.executeQuery("select sum(transfer) from inv_balance_sheet where account_id = 1 and floor(month_id /100) = 2020")
+
 		return this.account?.name + " - " + this.month?.id
 	}
 	
@@ -44,7 +45,7 @@ class AccountBalanceSheet {
 		return monthName
 	}
 	
-	static transients = ['longName', 'monthName', 'totalGain', 'totalGainPercent']
+	static transients = ['longName', 'monthName', 'totalGain', 'totalGainPercent', 'transferTotalCummulatative', 'incomeTotalCummulatative']
 
 	static namedQueries = {
 		loadByAccountId { Integer accountId ->

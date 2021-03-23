@@ -82,11 +82,25 @@
 					</tr>
 				<tr class="totalGreen">
 
-					<td><b>Difference</b></td>
+					<td><b>Diff Percent</b></td>
 
 					<g:each in="${yearlyReportBeanInstance.getYearList()}" status="jj" var="yearId">
 						<g:if test="${yearlyReportBeanInstance.getYearList().contains(yearId - 1) && (yearlyReportBeanInstance?.getTotalBalanceByYearAndAcountType(yearId-1, null) > 0)}">
 							<td><g:formatNumber number="${(yearlyReportBeanInstance.getTotalBalanceByYearAndAcountType(yearId, null) - yearlyReportBeanInstance.getTotalBalanceByYearAndAcountType(yearId-1, null)) / yearlyReportBeanInstance.getTotalBalanceByYearAndAcountType(yearId-1, null)}" type="percent"/></td>
+						</g:if>
+						<g:else>
+							<td>&nbsp;</td>
+						</g:else>
+					</g:each>
+
+				</tr>
+				<tr class="totalGreen">
+
+					<td><b>Diff Amount</b></td>
+
+					<g:each in="${yearlyReportBeanInstance.getYearList()}" status="jj" var="yearId">
+						<g:if test="${yearlyReportBeanInstance.getYearList().contains(yearId - 1) && (yearlyReportBeanInstance?.getTotalBalanceByYearAndAcountType(yearId-1, null) > 0)}">
+							<td><g:formatNumber number="${yearlyReportBeanInstance.getTotalBalanceByYearAndAcountType(yearId, null) - yearlyReportBeanInstance.getTotalBalanceByYearAndAcountType(yearId-1, null)}" type="currency" currencyCode="USD"/></td>
 						</g:if>
 						<g:else>
 							<td>&nbsp;</td>

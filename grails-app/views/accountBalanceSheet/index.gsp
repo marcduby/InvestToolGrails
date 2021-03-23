@@ -20,7 +20,12 @@
 			<g:each in="${accountUserBeanList}" status="i" var="accountUserBeanInstance">
 				<ul>
 					<g:each in="${accountUserBeanInstance?.accountBeanList}" status="j" var="accountBeanInstance">
-						<li><g:link class="create" action="indexByYear" params="[accountId: accountBeanInstance?.accountId, year: year]">${accountUserBeanInstance?.initial} - ${accountBeanInstance?.name}</g:link></li>
+						<g:if test="${listType != null && listType.equals('decade')}">
+							<li><g:link class="create" action="indexByDecade" params="[accountId: accountBeanInstance?.accountId, year: year]">${accountUserBeanInstance?.initial} - ${accountBeanInstance?.name}</g:link></li>
+						</g:if>
+						<g:else>
+							<li><g:link class="create" action="indexByYear" params="[accountId: accountBeanInstance?.accountId, year: year]">${accountUserBeanInstance?.initial} - ${accountBeanInstance?.name}</g:link></li>
+						</g:else>
 					</g:each>
 				</ul>
 			</g:each>
@@ -39,6 +44,8 @@
 						<th style="text-align:right"><g:message code="accountBalanceSheet.month.label" default="Month" /></th>
 					
 						<th style="text-align:right"><g:message code="accountBalanceSheet.gain.label" default="Gain" /></th>
+					
+						<th style="text-align:right"><g:message code="accountBalanceSheet.gain.label" default="Gain %" /></th>
 					
 						<g:sortableColumn class="currency" property="totalBalance" title="${message(code: 'accountBalanceSheet.totalBalance.label', default: 'Total Balance')}" />
 					
@@ -64,6 +71,8 @@
 					
 						<td class="currency">${fieldValue(bean: accountBalanceSheetInstance, field: "monthName")}</td>
 					
+						<td class="currency"><g:formatNumber number="${accountBalanceSheetInstance?.totalGain}" type="currency" currencyCode="USD" /></td>
+
 						<td class="currency"><g:formatNumber number="${accountBalanceSheetInstance?.totalGainPercent}" type="percent" maxFractionDigits="2"/></td>
 					
 						<td class="currency"><g:formatNumber number="${accountBalanceSheetInstance?.totalBalance}" type="currency" currencyCode="USD" /></td>
@@ -74,9 +83,19 @@
 
 						<td class="currency"><g:formatNumber number="${accountBalanceSheetInstance?.cdBalance}" type="currency" currencyCode="USD" /></td>
 
-						<td class="currency"><g:formatNumber number="${accountBalanceSheetInstance?.income}" type="currency" currencyCode="USD" /></td>
+						<g:if test="${listType != null && listType.equals('decade')}">
+							<td class="currency"><g:formatNumber number="${accountBalanceSheetInstance?.incomeTotalCummulatative}" type="currency" currencyCode="USD" /></td>
+						</g:if>
+						<g:else>
+							<td class="currency"><g:formatNumber number="${accountBalanceSheetInstance?.income}" type="currency" currencyCode="USD" /></td>
+						</g:else>
 
-						<td class="currency"><g:formatNumber number="${accountBalanceSheetInstance?.transfer}" type="currency" currencyCode="USD" /></td>
+						<g:if test="${listType != null && listType.equals('decade')}">
+							<td class="currency"><g:formatNumber number="${accountBalanceSheetInstance?.transferTotalCummulatative}" type="currency" currencyCode="USD" /></td>
+						</g:if>
+						<g:else>
+							<td class="currency"><g:formatNumber number="${accountBalanceSheetInstance?.transfer}" type="currency" currencyCode="USD" /></td>
+						</g:else>
 
 						<td class="currency">${fieldValue(bean: accountBalanceSheetInstance, field: "skip")}</td>
 
@@ -86,6 +105,7 @@
 				<tr class="totalGreen">
 					<td><b>Total</b></td>
 					<td>&nbsp;</td>
+					<td class="currency"><g:formatNumber number="${totalGain}" type="currency" currencyCode="USD" /></td>
 					<td class="currency"><g:formatNumber number="${totalGainPercent}" type="percent" maxFractionDigits="2"/></td>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>

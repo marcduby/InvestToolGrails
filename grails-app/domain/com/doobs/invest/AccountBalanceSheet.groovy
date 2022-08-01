@@ -21,8 +21,9 @@ class AccountBalanceSheet {
 	Date dateCreated
 	
 	public String toString() {
-		return this.getListName()
-				BigDecimal transferTotalCummulatative = AccountBalanceSheet.executeQuery("select sum(transfer) from inv_balance_sheet where account_id = 1 and floor(month_id /100) = 2020")
+		// return this.getListName()
+
+		// 		BigDecimal transferTotalCummulatative = AccountBalanceSheet.executeQuery("select sum(transfer) from inv_balance_sheet where account_id = 1 and floor(month_id /100) = 2020")
 
 		return this.account?.name + " - " + this.month?.id
 	}
@@ -63,6 +64,15 @@ class AccountBalanceSheet {
 			}
 			month {
 				eq 'id', monthId
+			}
+		}
+
+		findEarliest { Integer accountId ->
+			account {
+				eq 'id', accountId
+			}
+			month {
+				order("id")
 			}
 		}
 	}

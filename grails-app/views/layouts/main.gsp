@@ -23,9 +23,7 @@
                 <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="indexByDecade" params="[year:Calendar.getInstance().get(Calendar.YEAR)]">Decade</g:link></li>
                 <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="distributionReport" params="[year:Calendar.getInstance().get(Calendar.YEAR)]">Distrib</g:link></li>
                 <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="monthReport" params="[year:Calendar.getInstance().get(Calendar.YEAR)]">Month</g:link></li>
-                <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="monthReport" params="[year:2018]">Month2018</g:link></li>
-                <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="incomeReport" params="[year:2017]">Income 2017</g:link></li>
-                <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="incomeReport" params="[year:2018]">Income 2018</g:link></li>
+                <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="assetYearReport">Asset By Year</g:link></li>
                 <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="yearlyIncomeReport" params="[groupId:3]">Yearly Income</g:link></li>
                 <li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="yearlyBalanceReport" params="[groupId:3]">Yearly Balance</g:link></li>
 		    </ul>

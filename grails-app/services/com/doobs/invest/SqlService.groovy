@@ -2,6 +2,7 @@ package com.doobs.invest
 
 import com.doobs.invest.bean.distribution.DistributionMonthBean
 import com.doobs.invest.bean.distribution.DistributionTypeBean
+import com.doobs.invest.bean.balancesheet.YearDistributionBean
 import com.doobs.invest.bean.income.IncomeBean
 import com.doobs.invest.bean.income.YearlyReportBean
 import groovy.sql.Sql
@@ -638,5 +639,68 @@ select sum(income) as total_income from inv_balance_sheet where account_id = :ac
 
 		// return
 		return totalIncome;
+	}
+
+	/**
+	 * get the total income for an account for a year
+	 *
+	 * @return
+	 */
+	public YearDistributionBean getYearDistributionBeanForUser(Integer groupId) {
+		// local variabls
+		YearDistributionBean yearBean = new YearDistributionBean()
+		BigDecimal total = null
+		Integer accountTypeId = null
+		Integer year = null
+
+		// log
+		log.info("looking for all balance sheets for user group " + groupId)
+
+		// build the sql
+		def sqlString = """
+select ba.total_balance, acc.account_type_id, floor(ba.month_id / 100) as acc_year, us.name as name
+from inv_balance_sheet ba, inv_account acc, inv_user us, inv_user_group_link link
+where ba.account_id = acc.account_id 
+and acc.user_id = us.user_id
+and acc.user_id = link.user_id
+and link.group_id = :groupId
+and (ba.month_id % 100) = 12
+and floor(ba.month_id / 100) >= :minYear
+order by acc_year asc
+		"""
+
+		// log the sql string
+		log.info("the sql is: " + sqlString)
+
+		// execute the sql
+		def sql = new Sql(dataSource)
+		sql.eachRow(sqlString, [groupId: groupId, minYear: YearDistributionBean.START_YEAR]) { row ->
+			total = row.total_balance
+			accountTypeId = row.account_type_id
+			year = row.acc_year
+
+			// add to proper bin by account type
+			if (accountTypeId == 1) {
+				log.info("adding total: " + total + " for year: " + year)
+				yearBean.addToAccount(YearDistributionBean.INVEST, year, total);
+				log.info("new total: " + yearBean.getAccountTotal(YearDistributionBean.INVEST, year) + " for year: " + year)
+
+			} else if (accountTypeId == 2) {
+				yearBean.addToAccount(YearDistributionBean.IRA, year, total);
+			} else if (accountTypeId == 3) {
+				yearBean.addToAccount(YearDistributionBean.BANK, year, total);
+			} else if (accountTypeId == 4) {
+				yearBean.addToAccount(YearDistributionBean.RETIREMENT, year, total);
+			} else if (accountTypeId == 5) {
+				yearBean.addToAccount(YearDistributionBean.IRA, year, total);
+			}
+		}
+
+		// log the sql string
+		log.info("got year list of size: " + yearBean.getYearList().size())
+		log.info("for year : " + 2010 + " got invest total: " + yearBean.getAccountTotal(YearDistributionBean.INVEST, 2010))
+
+		// return
+		return yearBean;
 	}
 }

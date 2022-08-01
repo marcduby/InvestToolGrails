@@ -3,6 +3,7 @@ package com.doobs.invest
 import com.doobs.invest.bean.distribution.DistributionMonthBean
 import com.doobs.invest.bean.distribution.DistributionTypeBean
 import com.doobs.invest.bean.income.YearlyReportBean
+import com.doobs.invest.bean.balancesheet.YearDistributionBean
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
@@ -231,6 +232,30 @@ class AccountBalanceSheetController {
     }
 
     @Transactional
+    def assetYearReport(Integer max) {
+        // local variables
+        YearDistributionBean yearBean = null;
+        List<Integer> yearList = null;
+
+        // get the group id
+        Integer groupId = 3;
+        if (params.groupId) {
+            groupId = Integer.valueOf(params.groupId)
+        }
+
+        // get the list
+        // goupings of balance sheet
+        yearBean = this.sqlService?.getYearDistributionBeanForUser(groupId);
+        yearList = yearBean.getYearList()
+
+        // get the group list
+        List<UserGroup> userGroupList = UserGroup.list()
+
+        // return
+        render model:[yearBean: yearBean, yearList: yearList, userGroupList: userGroupList], view: "assetYearReport"
+    }
+
+    @Transactional
     def indexByYear(Integer max) {
         // get the year and account
         Integer year = params.year ? Integer.parseInt(params?.year) : 2017
@@ -249,8 +274,14 @@ class AccountBalanceSheetController {
         Float totalGainPercent = 0.0;
         for (int index = 0; index < accountBalanceSheetList.size(); index++) {
             AccountBalanceSheet accountBalanceSheet = accountBalanceSheetList.get(index)
-            totalIncome += accountBalanceSheet?.income;
-            totalTransfer += accountBalanceSheet?.transfer;
+
+            // only add if balance sheet from this year
+            if (accountBalanceSheet?.month?.year == year) {
+                totalIncome += accountBalanceSheet?.income;
+                totalTransfer += accountBalanceSheet?.transfer;
+            }
+
+            // calculate transient values for the balance sheets
             if (index > 0 && accountBalanceSheetList.get(index - 1)?.totalBalance != null) {
                 accountBalanceSheet.totalGain = accountBalanceSheet?.totalBalance - accountBalanceSheetList.get(index - 1)?.totalBalance - accountBalanceSheet?.transfer
 
@@ -288,6 +319,8 @@ class AccountBalanceSheetController {
 
         // get the user list
         List<AccountUserBean> accountUserBeanList = this.sqlService?.getUserAndAccountsList();
+
+		// AccountBalanceSheet earliest = AccountBalanceSheet.findEarliest(accountId).first()
 
         // add up the income and transfers
         Float totalIncome = 0.0;

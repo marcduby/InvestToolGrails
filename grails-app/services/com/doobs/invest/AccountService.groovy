@@ -71,6 +71,10 @@ class AccountService {
 		// get the list of months for the year
 		monthList = this.sqlService.getMonthsForYear(year);
 
+		// add in the previous year's last month
+		Integer lastYearMonth = (year-1) * 100 + 12;
+		monthList.add(0, Month.get(lastYearMonth))
+
 		// get the account
 		Account account = Account.get(accountId);
 
@@ -126,6 +130,10 @@ class AccountService {
 		// get the account
 		Account account = Account.get(accountId);
 
+		// get earliest year for this account
+		// AccountBalanceSheet earliest = AccountBalanceSheet.findEarliest(accountId)
+		
+		// build the year list
 		for (int i = currentYear - 11; i < currentYear; i++) {
 			int monthId = i * 100 + 12;
 			Month month = Month.get(monthId)

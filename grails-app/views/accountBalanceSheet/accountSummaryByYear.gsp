@@ -10,13 +10,6 @@
 	<body>
 		<a href="#list-accountBalanceSheet" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
 		<div class="nav" role="navigation">
-			<ul>
-				<g:each in="${(2008..2021)}" var="yearId">
-					<li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="indexByYear" params="[year:yearId]">Cash ${yearId}</g:link></li>
-				</g:each>
-			</ul>
-		</div>
-		<div class="nav" role="navigation">
 			<g:each in="${accountUserBeanList}" status="i" var="accountUserBeanInstance">
 				<ul>
 					<g:each in="${accountUserBeanInstance?.accountBeanList}" status="j" var="accountBeanInstance">
@@ -41,6 +34,8 @@
 					
 						<th><g:message code="accountBalanceSheet.account.label" default="Account" /></th>
 					
+						<th style="text-align:right"><g:message code="accountBalanceSheet.month.label" default="Year" /></th>
+					
 						<th style="text-align:right"><g:message code="accountBalanceSheet.month.label" default="Month" /></th>
 					
 						<th style="text-align:right"><g:message code="accountBalanceSheet.gain.label" default="Gain" /></th>
@@ -49,17 +44,9 @@
 					
 						<g:sortableColumn class="currency" property="totalBalance" title="${message(code: 'accountBalanceSheet.totalBalance.label', default: 'Total Balance')}" />
 					
-						<g:sortableColumn class="currency" property="cashBalance" title="${message(code: 'accountBalanceSheet.cashBalance.label', default: 'Cash Balance')}" />
-
-						<g:sortableColumn class="currency" property="moneyMarket" title="${message(code: 'accountBalanceSheet.mmaBalance.label', default: 'Money Market')}" />
-
-						<g:sortableColumn class="currency" property="cdBalance" title="${message(code: 'accountBalanceSheet.cdBalance.label', default: 'CD Balance')}" />
-
 						<g:sortableColumn class="currency" property="income" title="${message(code: 'accountBalanceSheet.income.label', default: 'Income')}" />
 					
 						<g:sortableColumn class="currency" property="transfer" title="${message(code: 'accountBalanceSheet.transfer.label', default: 'Transfer')}" />
-
-						<th class="currency"><g:message code="accountBalanceSheet.month.label" default="Skip" /></th>
 
 					</tr>
 				</thead>
@@ -77,12 +64,6 @@
 					
 						<td class="currency"><g:formatNumber number="${accountBalanceSheetInstance?.totalBalance}" type="currency" currencyCode="USD" /></td>
 
-						<td class="currency"><g:formatNumber number="${accountBalanceSheetInstance?.cashBalance}" type="currency" currencyCode="USD" /></td>
-
-						<td class="currency"><g:formatNumber number="${accountBalanceSheetInstance?.moneyMarket}" type="currency" currencyCode="USD" /></td>
-
-						<td class="currency"><g:formatNumber number="${accountBalanceSheetInstance?.cdBalance}" type="currency" currencyCode="USD" /></td>
-
 						<g:if test="${listType != null && listType.equals('decade')}">
 							<td class="currency"><g:formatNumber number="${accountBalanceSheetInstance?.incomeTotalCummulatative}" type="currency" currencyCode="USD" /></td>
 						</g:if>
@@ -96,8 +77,6 @@
 						<g:else>
 							<td class="currency"><g:formatNumber number="${accountBalanceSheetInstance?.transfer}" type="currency" currencyCode="USD" /></td>
 						</g:else>
-
-						<td class="currency">${fieldValue(bean: accountBalanceSheetInstance, field: "skip")}</td>
 
 					</tr>
 				</g:each>

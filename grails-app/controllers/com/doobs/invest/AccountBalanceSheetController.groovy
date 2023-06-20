@@ -45,18 +45,31 @@ class AccountBalanceSheetController {
         if ((balanceSheetListBeanList != null) && (balanceSheetListBeanList.size() > 0)) {
             monthList = balanceSheetListBeanList.get(0).monthList;
 
+            // add 0 values to map
+            for (Month month: monthList) {
+                totalBalanceMap.put(month.id, new BigDecimal(0))
+            }
             // loop to get all the totals
             for (BalanceSheetListBean bean : balanceSheetListBeanList) {
                 for (AccountBalanceSheet sheet : bean.accountBalanceSheetList) {
-                    if (totalBalanceMap.get(sheet.month.id) == null) {
-                        totalBalanceMap.put(sheet.month.id, new BigDecimal(0))
+                    if (sheet != null && totalBalanceMap.get(sheet.month.id) != null) {
+                        // add
+                        totalBalanceMap.put(sheet.month.id, totalBalanceMap.get(sheet.month.id).add(sheet.totalBalance))
                     }
-
-                    // add
-                    totalBalanceMap.put(sheet.month.id, totalBalanceMap.get(sheet.month.id).add(sheet.totalBalance))
                 }
             }
 
+            // // loop to get all the totals
+            // for (BalanceSheetListBean bean : balanceSheetListBeanList) {
+            //     for (AccountBalanceSheet sheet : bean.accountBalanceSheetList) {
+            //         if (totalBalanceMap.get(sheet.month.id) == null) {
+            //             totalBalanceMap.put(sheet.month.id, new BigDecimal(0))
+            //         }
+
+            //         // add
+            //         totalBalanceMap.put(sheet.month.id, totalBalanceMap.get(sheet.month.id).add(sheet.totalBalance))
+            //     }
+            // }
         }
 
         // return
@@ -213,18 +226,32 @@ class AccountBalanceSheetController {
         if ((balanceSheetListBeanList != null) && (balanceSheetListBeanList.size() > 0)) {
             monthList = balanceSheetListBeanList.get(0).monthList;
 
-            // loop to get all the totals
-            for (BalanceSheetListBean bean : balanceSheetListBeanList) {
-                for (AccountBalanceSheet sheet : bean.accountBalanceSheetList) {
-                    if (sheet == null || totalBalanceMap.get(sheet.month.id) == null) {
-                        totalBalanceMap.put(sheet.month.id, new BigDecimal(0))
-                    }
-
-                    // add
-                    totalBalanceMap.put(sheet.month.id, totalBalanceMap.get(sheet.month.id).add(sheet.totalBalance))
-                }
+            // add a total balance object
+            for (Month month : monthList) {
+                totalBalanceMap.put(month.id, new BigDecimal(0))
             }
 
+            // loop to get all the totals
+            // loop through the balance sheet list beans (by account type)
+            // for (BalanceSheetListBean bean : balanceSheetListBeanList) {
+            //     for (AccountBalanceSheet sheet : bean.accountBalanceSheetList) {
+            //         if (sheet == null || totalBalanceMap.get(sheet.month.id) == null) {
+            //             totalBalanceMap.put(sheet.month.id, new BigDecimal(0))
+            //         }
+
+            //         // add
+            //         totalBalanceMap.put(sheet.month.id, totalBalanceMap.get(sheet.month.id).add(sheet.totalBalance))
+            //     }
+            // }
+
+            for (BalanceSheetListBean bean : balanceSheetListBeanList) {
+                for (AccountBalanceSheet sheet : bean.accountBalanceSheetList) {
+                    if (sheet != null && totalBalanceMap.get(sheet.month.id) != null) {
+                        // add
+                        totalBalanceMap.put(sheet.month.id, totalBalanceMap.get(sheet.month.id).add(sheet.totalBalance))
+                    }
+                }
+            }
         }
 
         // return

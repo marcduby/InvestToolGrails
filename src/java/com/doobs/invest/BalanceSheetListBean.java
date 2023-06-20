@@ -6,6 +6,8 @@ import java.util.List;
 
 /**
  * Created by mduby on 1/4/18.
+ *
+ * groups account informatilon for a list of accounts of the same type
  */
 public class BalanceSheetListBean {
     // instance variables
@@ -60,7 +62,7 @@ public class BalanceSheetListBean {
         AccountBalanceSheet accountBalanceSheet = null;
 
         for (AccountBalanceSheet sheet : this.accountBalanceSheetList) {
-            if ((monthId == sheet.getMonth().getId()) && (accountId == sheet.getAccount().getId())) {
+            if (sheet != null && (monthId == sheet.getMonth().getId()) && (accountId == sheet.getAccount().getId())) {
                 accountBalanceSheet = sheet;
                 break;
             }
@@ -81,7 +83,7 @@ public class BalanceSheetListBean {
 
         // loop and get total
         for (AccountBalanceSheet sheet : this.accountBalanceSheetList) {
-            if (sheet.getMonth().getId() == monthId) {
+            if (sheet != null && sheet.getMonth().getId() == monthId) {
                 total = total.add(sheet.getTotalBalance());
             }
         }

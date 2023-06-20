@@ -1,5 +1,14 @@
 
 
+- todo 
+  - report by risk 
+    - invest/cash/CDs
+    - invest/ira/roth/bene 
+  - report of performance by account 
+    - varying length (1 year, 5 years, 10 years)  
+  - interest cash by year (might have)
+
+
 - ideas
   - report by industry
   - report by risk

@@ -50,3 +50,6 @@ call create_month_data_while_loop;
 
 -- test
 select * from inv_month where month_id div 100 = 2017;
+
+-- manual creation
+

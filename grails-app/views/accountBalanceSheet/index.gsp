@@ -11,7 +11,7 @@
 		<a href="#list-accountBalanceSheet" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
 		<div class="nav" role="navigation">
 			<ul>
-				<g:each in="${(2008..2021)}" var="yearId">
+				<g:each in="${(2008..2023)}" var="yearId">
 					<li><g:link class="${request.forwardURI.contains('/accountBalanceSheet') ? 'current' : ''}" controller="accountBalanceSheet" action="indexByYear" params="[year:yearId]">Cash ${yearId}</g:link></li>
 				</g:each>
 			</ul>
